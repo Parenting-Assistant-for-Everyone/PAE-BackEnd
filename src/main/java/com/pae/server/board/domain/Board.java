@@ -11,13 +11,18 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn
 @Table(name = "board")
-public class Board extends BaseEntity {
+public abstract class Board extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_id")
@@ -35,6 +40,11 @@ public class Board extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @OneToMany(mappedBy = "board")
+    private List<Comment> comments = new ArrayList<>();
+    @OneToMany(mappedBy = "board")
+    private List<Image> images = new ArrayList<>();
 
     @ColumnDefault("0")
     private Long viewCount;
