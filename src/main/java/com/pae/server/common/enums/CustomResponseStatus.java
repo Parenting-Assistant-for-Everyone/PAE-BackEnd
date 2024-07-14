@@ -8,6 +8,9 @@ import org.springframework.http.HttpStatusCode;
 public enum CustomResponseStatus {
     // Todo : 우리들만의 code 만들기
     SUCCESS(HttpStatus.OK.value(), "1000", "요청에 성공하였습니다."),
+    BOARD_DELETE(HttpStatus.OK.value(), "2001", "게시판을 삭제 하였습니다"),
+    COMMENT_CREATE(HttpStatus.OK.value(), "2011", "댓글을 생성하였습니다"),
+    COMMENT_DELETE(HttpStatus.OK.value(), "2012", "댓글을 삭제하였습니다"),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "6000", "내부 서버 오류입니다."),
     S3_UPLOAD_FAIL(HttpStatus.INTERNAL_SERVER_ERROR.value(), "6001", "S3에 파일을 업로드하지 못했습니다.");
 
