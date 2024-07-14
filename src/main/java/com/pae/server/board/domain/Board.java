@@ -2,6 +2,7 @@ package com.pae.server.board.domain;
 
 import com.pae.server.common.domain.BaseEntity;
 import com.pae.server.common.enums.BaseStatus;
+import com.pae.server.like.domain.Like;
 import com.pae.server.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.*;
@@ -44,6 +45,8 @@ public abstract class Board extends BaseEntity {
     private List<Comment> comments = new ArrayList<>();
     @OneToMany(mappedBy = "board")
     private List<Image> images = new ArrayList<>();
+    @OneToMany(mappedBy = "board")
+    private List<Like> likes = new ArrayList<>();
 
     @ColumnDefault("0")
     private Integer viewCount;

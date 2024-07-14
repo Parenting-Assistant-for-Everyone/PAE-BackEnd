@@ -4,6 +4,7 @@ import com.pae.server.board.domain.Board;
 import com.pae.server.common.domain.BaseEntity;
 import com.pae.server.common.enums.BaseStatus;
 import com.pae.server.image.domain.ImageData;
+import com.pae.server.like.domain.Like;
 import com.pae.server.member.domain.enums.AuthStatus;
 import com.pae.server.member.domain.enums.Gender;
 import com.pae.server.member.domain.oauth.OAuthInfo;
@@ -64,6 +65,9 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member")
     private List<Board> boards = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Like> likes = new ArrayList<>();
 
 
 }
