@@ -24,9 +24,10 @@ public class ChildInformationServiceImpl implements ChildInformationService{
             throw new CustomException(CustomResponseStatus.MEMBER_NOT_FOUND);
         }
         else{
-            ChildInformation childInformation = childInformationRepository.save(ChildInformationConverter.createChildInformation(dto));
+            ChildInformation childInformation = ChildInformationConverter.createChildInformation(dto);
             Member member = memberRepository.findById(dto.memberId()).get();
             childInformation.setMember(member);
+            childInformationRepository.save(childInformation);
             return childInformation;
 
         }
@@ -59,6 +60,14 @@ public class ChildInformationServiceImpl implements ChildInformationService{
 
     @Override
     public List<ChildInformation> searchChildInformation(Long id) {
-        return null;
+        if(!memberRepository.existsById(id)){
+            throw new CustomException(CustomResponseStatus.MEMBER_NOT_FOUND);
+        }
+        else{
+            Member member = memberRepository.findById(id).get();
+            List<ChildInformation> informationList = member.getInformationList();
+            return informationList;
+
+        }
     }
 }

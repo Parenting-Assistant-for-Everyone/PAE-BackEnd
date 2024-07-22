@@ -1,5 +1,6 @@
 package com.pae.server.member.domain;
 
+import com.pae.server.assistant.domain.MatchHistory;
 import com.pae.server.board.domain.Board;
 import com.pae.server.common.domain.BaseEntity;
 import com.pae.server.common.enums.BaseStatus;
@@ -71,6 +72,9 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member")
     private List<ChildInformation> informationList = new ArrayList<>();
+    @OneToMany(mappedBy = "member")
+    private  List<MatchHistory> matchHistoryList = new ArrayList<>();
+
 
 
 }
