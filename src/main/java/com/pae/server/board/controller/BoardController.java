@@ -1,16 +1,17 @@
 package com.pae.server.board.controller;
 
+import com.pae.server.assistant.domain.Assistant;
 import com.pae.server.board.converter.BoardConverter;
 import com.pae.server.board.domain.Board;
 import com.pae.server.board.domain.MatchingBoard;
 import com.pae.server.board.dto.request.CreateMatchingBoardDto;
 import com.pae.server.board.dto.request.UpdateMatchingBoardDto;
-import com.pae.server.board.dto.response.CreateMatchingBoardResDto;
-import com.pae.server.board.dto.response.MatchingBoardListDto;
-import com.pae.server.board.dto.response.UpdateMatchingBoardResDto;
+import com.pae.server.board.dto.response.*;
 import com.pae.server.board.service.BoardServiceImpl;
 import com.pae.server.common.dto.ApiResponse;
 import com.pae.server.common.enums.CustomResponseStatus;
+import com.pae.server.member.converter.MemberConverter;
+import com.pae.server.member.domain.Member;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -90,6 +91,18 @@ public class BoardController {
     public ApiResponse<MatchingBoardListDto> getRecentResult(){
         List<MatchingBoard> result = boardService.getRecentResult();
         return ApiResponse.createSuccess(BoardConverter.getMatchingBoardList(result),CustomResponseStatus.SUCCESS);
+    }
+    //육아도우미 구인글 작성자 프로필 조회
+    @GetMapping("/getMemberProfile/{boardId}")
+    public ApiResponse<MemberProfileResDto> getMemberProfile(@PathVariable(name = "boardId")Long boardId){
+        Member member = boardService.getMemberProfile(boardId);
+        return ApiResponse.createSuccess(MemberConverter.getMemberProfile(member),CustomResponseStatus.SUCCESS);
+    }
+    //육아도우미 구직글 작성자 프로필 조회
+    @GetMapping("/getAssistantProfile/{boardId}")
+    public ApiResponse<AssistantProfileResDto> getAssistantProfile(@PathVariable(name="boardId")Long boardId){
+        Assistant assistant = boardService.getAssistantProfile(boardId);
+        return ApiResponse.createSuccess(MemberConverter.getAssistantProfile(assistant),CustomResponseStatus.SUCCESS);
     }
 
 }

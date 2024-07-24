@@ -7,6 +7,7 @@ import com.pae.server.common.enums.BaseStatus;
 import com.pae.server.image.domain.ImageData;
 import com.pae.server.like.domain.Like;
 import com.pae.server.member.domain.enums.AuthStatus;
+import com.pae.server.member.domain.enums.CCTV;
 import com.pae.server.member.domain.enums.Gender;
 import com.pae.server.member.domain.oauth.OAuthInfo;
 import jakarta.persistence.*;
@@ -59,7 +60,10 @@ public class Member extends BaseEntity {
     private ImageData imageData;
 
     @ColumnDefault("0")
-    private int reportCount;
+    private int reportCount; //신고누적수
+    private String introduce;
+    private String precautions;
+    private CCTV cctv;
 
     @OneToMany(mappedBy = "member")
     private List<MemberRole> roles = new ArrayList<>();

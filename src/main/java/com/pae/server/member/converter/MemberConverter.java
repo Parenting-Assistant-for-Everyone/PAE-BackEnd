@@ -1,8 +1,13 @@
 package com.pae.server.member.converter;
 
+import com.pae.server.assistant.converter.CareerConverter;
 import com.pae.server.assistant.domain.Assistant;
 import com.pae.server.assistant.domain.MatchHistory;
+import com.pae.server.assistant.dto.response.CreateCareerListResDto;
 import com.pae.server.assistant.repository.AssistantRepository;
+import com.pae.server.board.converter.BoardConverter;
+import com.pae.server.board.dto.response.AssistantProfileResDto;
+import com.pae.server.board.dto.response.MemberProfileResDto;
 import com.pae.server.member.domain.Member;
 import com.pae.server.member.dto.request.MatchingReqDto;
 import com.pae.server.member.dto.response.MatchingListResDto;
@@ -39,6 +44,28 @@ public class MemberConverter {
         return MatchingListResDto.builder()
                 .list(dto)
                 .size(dto.size())
+                .build();
+    }
+    public static MemberProfileResDto getMemberProfile(Member member){
+        return MemberProfileResDto.builder()
+                .nickName(member.getNickname())
+                .gender(member.getGender())
+                .profileUrl(member.getImageData().getPhotoUrl())
+                .introduce(member.getIntroduce())
+                .precautions(member.getPrecautions())
+                .cctv(member.getCctv())
+                .build();
+    }
+    public static AssistantProfileResDto getAssistantProfile(Assistant assistant){
+        CreateCareerListResDto careerListResDto = CareerConverter.createCareerListResDto(assistant.getCareerList());
+        return AssistantProfileResDto.builder()
+                .name(assistant.getName())
+                .assistantStatus(assistant.getAssistantStatus())
+                .certificationStatus(assistant.getCertificationStatus())
+                .introduce(assistant.getIntroduce())
+                .precaution(assistant.getPrecaution())
+                .profileUrl(assistant.getImageData().getPhotoUrl())
+                .careerList(careerListResDto)
                 .build();
     }
 }

@@ -16,7 +16,10 @@ public enum CustomResponseStatus {
     ALREADY_LIKED(HttpStatus.INTERNAL_SERVER_ERROR.value(),"6011","이미 찜한 게시판입니다"),
     BOARD_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR.value(),"6012","게시판이 존재하지 않습니다."),
     LIKE_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR.value(), "6013","좋아요가 존재하지 않습니다."),
+    NOT_OFFER_BOARD(HttpStatus.INTERNAL_SERVER_ERROR.value(), "6014","구인게시글이 아닙니다."),
     MEMBER_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR.value(),"6021","멤버가 존재하지 않습니다."),
+    ASSISTANT_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR.value(),"6022","육아도우미가 존재하지 않습니다."),
+
     CHILD_ASSISTANT_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR.value(), "6024","육아도우미가 존재하지 않습니다."),
     CHILD_INFORMATION_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR.value(), "6031","아이 정보가 존재하지 않습니다"),
     MATCHING_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR.value(), "6041","매칭 정보가 존재하지 않습니다.");

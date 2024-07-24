@@ -32,6 +32,9 @@ public class Assistant extends BaseEntity {
     private Gender gender;
     @Column(length = 200)
     private String introduce;
+    @Column(length=100)
+    private String precaution; //주의사항
+
     @Embedded
     private ImageData imageData;
     @Enumerated(EnumType.STRING)
@@ -48,4 +51,11 @@ public class Assistant extends BaseEntity {
     private PreferredActivity preferredActivity;
     @OneToMany(mappedBy = "assistant")
     private List<MatchHistory> matchHistoryList = new ArrayList<>();
+    @OneToMany(mappedBy = "assistant", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Career> careerList = new ArrayList<>();
+
+    public void addCareer(Career career) {
+        careerList.add(career);
+        career.setAssistant(this);
+    }
 }
