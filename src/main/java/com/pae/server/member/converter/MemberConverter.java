@@ -9,9 +9,12 @@ import com.pae.server.board.converter.BoardConverter;
 import com.pae.server.board.dto.response.AssistantProfileResDto;
 import com.pae.server.board.dto.response.MemberProfileResDto;
 import com.pae.server.member.domain.Member;
+import com.pae.server.member.dto.request.LocationAuthReqDto;
 import com.pae.server.member.dto.request.MatchingReqDto;
+import com.pae.server.member.dto.response.LocationAuthResDto;
 import com.pae.server.member.dto.response.MatchingListResDto;
 import com.pae.server.member.dto.response.MatchingResDto;
+import com.pae.server.member.dto.response.NeighborhoodFinderResDto;
 import com.pae.server.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -66,6 +69,19 @@ public class MemberConverter {
                 .precaution(assistant.getPrecaution())
                 .profileUrl(assistant.getImageData().getPhotoUrl())
                 .careerList(careerListResDto)
+                .build();
+    }
+    public static LocationAuthResDto getLocationResult(double latitude, double longitude, Long memberId){
+        return LocationAuthResDto.builder()
+                .memberId(memberId)
+                .latitude(latitude)
+                .longitude(longitude)
+                .build();
+    }
+    public static NeighborhoodFinderResDto getNeighborhoodFinder(List<LocationAuthResDto> dto){
+        return NeighborhoodFinderResDto.builder()
+                .size(dto.size())
+                .locationList(dto)
                 .build();
     }
 }

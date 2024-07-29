@@ -6,16 +6,16 @@ import com.pae.server.common.enums.CustomResponseStatus;
 import com.pae.server.member.converter.ChildInformationConverter;
 import com.pae.server.member.converter.MemberConverter;
 import com.pae.server.member.domain.ChildInformation;
+import com.pae.server.member.domain.Member;
 import com.pae.server.member.dto.request.CreateChildInformationReqDto;
+import com.pae.server.member.dto.request.LocationAuthReqDto;
 import com.pae.server.member.dto.request.MatchingReqDto;
-import com.pae.server.member.dto.response.ChildInformationListResDto;
-import com.pae.server.member.dto.response.CreateChildInformationResDto;
-import com.pae.server.member.dto.response.MatchingListResDto;
-import com.pae.server.member.dto.response.MatchingResDto;
+import com.pae.server.member.dto.response.*;
 import com.pae.server.member.service.ChildInformationServiceImpl;
 import com.pae.server.member.service.MemberServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -75,5 +75,20 @@ public class MemberController {
                                                          @RequestParam(name = "status",required = false)String status){
         List<MatchHistory> matchHistories = memberService.viewMatching(memberId,status);
         return ApiResponse.createSuccess(MemberConverter.viewMatchingList(matchHistories),CustomResponseStatus.SUCCESS);
+    }
+    //Member 실시간 동네 인증
+    @PostMapping("/getAddress")
+    public ApiResponse<String> locationAuth(@RequestBody LocationAuthReqDto dto){
+        String address = memberService.getAddress(dto,1);
+        return ApiResponse.createSuccess(address,CustomResponseStatus.SUCCESS);
+    }
+    //초반에 지도 육아도우미 위치 렌더링 할 때, 사용자(육아도우미, 멤버) address 기준으로 설정.
+    @GetMapping("/findAtLocation")
+    public ApiResponse<NeighborhoodFinderResDto> getAtLocation(@RequestParam(name = "city") String city,
+                                                               @RequestParam(name = "district") String district,
+                                                               @RequestParam(name = "neighborhood") String neighborhood){
+        String fullAddress = String.join(" ", city, district, neighborhood);
+        List<LocationAuthResDto> sameLocationResult = memberService.getSameLocationResult(fullAddress, 1);
+        return ApiResponse.createSuccess(MemberConverter.getNeighborhoodFinder(sameLocationResult),CustomResponseStatus.SUCCESS);
     }
 }

@@ -55,16 +55,21 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(length = 10)
     private BaseStatus memberStatus;
-
     @Embedded
     private ImageData imageData;
-
     @ColumnDefault("0")
     private int reportCount; //신고누적수
+    @Column(length = 100)
     private String introduce;
+    @Column(length = 200)
     private String precautions;
     private CCTV cctv;
-
+    @Column
+    private double latitude;  // 위도
+    @Column
+    private double longitude; // 경도
+    @Column(length = 30)
+    private String address;
     @OneToMany(mappedBy = "member")
     private List<MemberRole> roles = new ArrayList<>();
 
@@ -78,6 +83,11 @@ public class Member extends BaseEntity {
     private List<ChildInformation> informationList = new ArrayList<>();
     @OneToMany(mappedBy = "member")
     private  List<MatchHistory> matchHistoryList = new ArrayList<>();
+    public void setAddress(String address,double latitude, double longitude){
+        this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 
 
 

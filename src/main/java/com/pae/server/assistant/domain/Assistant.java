@@ -34,7 +34,10 @@ public class Assistant extends BaseEntity {
     private String introduce;
     @Column(length=100)
     private String precaution; //주의사항
-
+    @Column
+    private double latitude;  // 위도
+    @Column
+    private double longitude; // 경도
     @Embedded
     private ImageData imageData;
     @Enumerated(EnumType.STRING)
@@ -57,5 +60,11 @@ public class Assistant extends BaseEntity {
     public void addCareer(Career career) {
         careerList.add(career);
         career.setAssistant(this);
+    }
+
+    public void setAddress(String address, double latitude, double longitude) {
+        this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 }
