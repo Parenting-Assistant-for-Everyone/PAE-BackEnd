@@ -1,8 +1,10 @@
 package com.pae.server.board.service;
 
+import com.pae.server.assistant.domain.Assistant;
 import com.pae.server.board.domain.MatchingBoard;
 import com.pae.server.board.dto.request.CreateMatchingBoardDto;
 import com.pae.server.board.dto.request.UpdateMatchingBoardDto;
+import com.pae.server.member.domain.Member;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -18,4 +20,6 @@ public interface BoardService {
     List<MatchingBoard> getSearchResult(String keyWord);
     List<MatchingBoard> getViewCountResult();
     List<MatchingBoard> getRecentResult();
+    Member getMemberProfile(Long boardId);//육아도우미 구인 게시판 글쓴이 프로필 조회
+    Assistant getAssistantProfile(Long boardId); //육아도임 구직 게시판 글쓴이 프로필 조회
 }

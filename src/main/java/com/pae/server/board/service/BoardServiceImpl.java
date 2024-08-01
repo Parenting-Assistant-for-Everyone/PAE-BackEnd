@@ -1,5 +1,7 @@
 package com.pae.server.board.service;
 
+import com.pae.server.assistant.domain.Assistant;
+import com.pae.server.assistant.repository.AssistantRepository;
 import com.pae.server.board.converter.BoardConverter;
 import com.pae.server.board.domain.MatchingBoard;
 import com.pae.server.board.domain.enums.BoardType;
@@ -7,6 +9,9 @@ import com.pae.server.board.dto.request.CreateMatchingBoardDto;
 import com.pae.server.board.dto.request.UpdateMatchingBoardDto;
 import com.pae.server.board.repository.BoardRepository;
 import com.pae.server.board.repository.MatchingBoardRepository;
+import com.pae.server.common.enums.CustomResponseStatus;
+import com.pae.server.common.exception.CustomException;
+import com.pae.server.member.domain.Member;
 import com.pae.server.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -21,6 +26,7 @@ public class BoardServiceImpl implements BoardService {
     private final BoardRepository boardRepository;
     private final MatchingBoardRepository matchingBoardRepository;
     private final MemberRepository memberRepository;
+    private final AssistantRepository assistantRepository;
     @Override
     @Transactional
     public MatchingBoard createMatchingBoard(CreateMatchingBoardDto dto) {
@@ -84,6 +90,43 @@ public class BoardServiceImpl implements BoardService {
     public List<MatchingBoard> getRecentResult() {
         List<MatchingBoard> matchingBoardList = matchingBoardRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
         return matchingBoardList;
+    }
+
+    @Override
+    public Member getMemberProfile(Long boardId) {
+        if(!matchingBoardRepository.existsById(boardId)){
+            throw new CustomException(CustomResponseStatus.BOARD_NOT_FOUND);
+        }
+        else{
+            MatchingBoard matchingBoard = matchingBoardRepository.findById(boardId).get();
+            if(matchingBoard.getBoardType()!=BoardType.OFFER){
+                throw new CustomException(CustomResponseStatus.NOT_OFFER_BOARD);
+            }
+            else{
+                Member member = memberRepository.findById(matchingBoard.getMember().getId())
+                        .orElseThrow(() -> new CustomException(CustomResponseStatus.MEMBER_NOT_FOUND));
+                return member;
+            }
+        }
+    }
+
+    @Override
+    public Assistant getAssistantProfile(Long boardId) {
+        if(!matchingBoardRepository.existsById(boardId)){
+            throw new CustomException(CustomResponseStatus.BOARD_NOT_FOUND);
+        }
+        else{
+            MatchingBoard matchingBoard = matchingBoardRepository.findById(boardId).get();
+            if(matchingBoard.getBoardType()!=BoardType.OFFER){
+                throw new CustomException(CustomResponseStatus.NOT_OFFER_BOARD);
+            }
+            else{
+                Assistant assistant = assistantRepository.findById(matchingBoard.getMember().getId())
+                        .orElseThrow(() -> new CustomException(CustomResponseStatus.ASSISTANT_NOT_FOUND));
+                return assistant;
+            }
+        }
+
     }
 
 

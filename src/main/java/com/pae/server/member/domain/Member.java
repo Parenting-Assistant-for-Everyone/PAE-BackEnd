@@ -1,11 +1,13 @@
 package com.pae.server.member.domain;
 
+import com.pae.server.assistant.domain.MatchHistory;
 import com.pae.server.board.domain.Board;
 import com.pae.server.common.domain.BaseEntity;
 import com.pae.server.common.enums.BaseStatus;
 import com.pae.server.image.domain.ImageData;
 import com.pae.server.like.domain.Like;
 import com.pae.server.member.domain.enums.AuthStatus;
+import com.pae.server.member.domain.enums.CCTV;
 import com.pae.server.member.domain.enums.Gender;
 import com.pae.server.member.domain.oauth.OAuthInfo;
 import jakarta.persistence.*;
@@ -53,13 +55,21 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(length = 10)
     private BaseStatus memberStatus;
-
     @Embedded
     private ImageData imageData;
-
     @ColumnDefault("0")
-    private int reportCount;
-
+    private int reportCount; //신고누적수
+    @Column(length = 100)
+    private String introduce;
+    @Column(length = 200)
+    private String precautions;
+    private CCTV cctv;
+    @Column
+    private double latitude;  // 위도
+    @Column
+    private double longitude; // 경도
+    @Column(length = 30)
+    private String address;
     @OneToMany(mappedBy = "member")
     private List<MemberRole> roles = new ArrayList<>();
 
@@ -68,6 +78,17 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member")
     private List<Like> likes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<ChildInformation> informationList = new ArrayList<>();
+    @OneToMany(mappedBy = "member")
+    private  List<MatchHistory> matchHistoryList = new ArrayList<>();
+    public void setAddress(String address,double latitude, double longitude){
+        this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
 
 
 }
