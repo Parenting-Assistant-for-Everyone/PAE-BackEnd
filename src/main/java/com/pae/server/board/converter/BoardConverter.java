@@ -29,7 +29,8 @@ public class BoardConverter {
                 .baseStatus(matchingBoard.getBaseStatus())
                 .boardType(matchingBoard.getBoardType())
                 .title(matchingBoard.getTitle())
-                .content(matchingBoard.getContent())
+                .content(matchingBoard.getContent()).
+                viewCount(matchingBoard.getViewCount())
                 .id(matchingBoard.getId())
                 .build();
     }

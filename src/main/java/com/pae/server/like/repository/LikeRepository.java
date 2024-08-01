@@ -1,4 +1,10 @@
 package com.pae.server.like.repository;
 
-public interface LikeRepository {
+import com.pae.server.like.domain.Like;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface LikeRepository extends JpaRepository<Like,Long> {
+    boolean existsByBoardIdAndMemberId(Long boardId, Long memberId);
+    boolean existsById(Long likeId);
+
 }

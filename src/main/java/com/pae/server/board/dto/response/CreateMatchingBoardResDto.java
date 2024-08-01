@@ -5,5 +5,5 @@ import com.pae.server.common.enums.BaseStatus;
 import lombok.Builder;
 
 @Builder
-public record CreateMatchingBoardResDto(Long id, String title, String content, BaseStatus baseStatus, BoardType boardType) {
+public record CreateMatchingBoardResDto(Long id, String title, String content,Integer viewCount ,BaseStatus baseStatus, BoardType boardType) {
 }
