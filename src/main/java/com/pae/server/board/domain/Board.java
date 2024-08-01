@@ -4,10 +4,8 @@ import com.pae.server.common.domain.BaseEntity;
 import com.pae.server.common.enums.BaseStatus;
 import com.pae.server.member.domain.Member;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -17,7 +15,8 @@ import java.util.List;
 @Entity
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@SuperBuilder
 @DynamicInsert
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn
@@ -47,5 +46,24 @@ public abstract class Board extends BaseEntity {
     private List<Image> images = new ArrayList<>();
 
     @ColumnDefault("0")
-    private Long viewCount;
+    private Integer viewCount;
+
+    public void setMember(Member member){
+        this.member = member;
+        member.getBoards().add(this);
+    }
+    protected void setTitle(String title) {
+        this.title = title;
+    }
+
+    protected void setContent(String content) {
+        this.content = content;
+    }
+
+    protected void setBaseStatus(BaseStatus baseStatus) {
+        this.baseStatus = baseStatus;
+    }
+    public void incrementViewCount(){
+        this.viewCount+=1;
+    }
 }

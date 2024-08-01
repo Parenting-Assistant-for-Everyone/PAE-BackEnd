@@ -1,16 +1,15 @@
 package com.pae.server.board.domain;
 
+import com.pae.server.common.domain.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Comment {
+public class Comment extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long parentId; //부모 댓글(대댓글)
@@ -22,5 +21,14 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private Board board;
-
+    public void setBoard(Board board){
+        this.board = board;
+        board.getComments().add(this);
+    }
+    public void deleteBoardFromComment() {
+        if (board != null) {
+            board.getComments().remove(this);
+            this.board = null;
+        }
+    }
 }
