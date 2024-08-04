@@ -53,7 +53,7 @@ public class MemberConverter {
         return MemberProfileResDto.builder()
                 .nickName(member.getNickname())
                 .gender(member.getGender())
-                .profileUrl(member.getImageData().getPhotoUrl())
+                .profileUrl(member.getPhotoData().getPhotoUrl())
                 .introduce(member.getIntroduce())
                 .precautions(member.getPrecautions())
                 .cctv(member.getCctv())
@@ -67,7 +67,7 @@ public class MemberConverter {
                 .certificationStatus(assistant.getCertificationStatus())
                 .introduce(assistant.getIntroduce())
                 .precaution(assistant.getPrecaution())
-                .profileUrl(assistant.getImageData().getPhotoUrl())
+                .profileUrl(assistant.getPhotoData().getPhotoUrl())
                 .careerList(careerListResDto)
                 .build();
     }

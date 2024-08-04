@@ -2,7 +2,7 @@ package com.pae.server.image.util;
 
 import com.pae.server.common.enums.CustomResponseStatus;
 import com.pae.server.common.exception.CustomException;
-import com.pae.server.image.domain.ImageData;
+import com.pae.server.image.domain.PhotoData;
 import io.awspring.cloud.s3.ObjectMetadata;
 import io.awspring.cloud.s3.S3Resource;
 import io.awspring.cloud.s3.S3Template;
@@ -21,10 +21,11 @@ import java.util.UUID;
 @Slf4j
 public class S3Util {
     private final S3Template s3Template;
+
     @Value("${aws.s3.bucket}")
     private String bucket;
 
-    public ImageData uploadFile(MultipartFile file) {
+    public PhotoData uploadFile(MultipartFile file) {
         String fileName =
                 UUID.randomUUID() + "." + file.getOriginalFilename();
         ObjectMetadata metadata = new ObjectMetadata.Builder()
@@ -34,11 +35,12 @@ public class S3Util {
 
         try (InputStream is = file.getInputStream();) {
             S3Resource upload = s3Template.upload(bucket, fileName, is, metadata);
-            return ImageData.of(
+            return PhotoData.of(
                     file.getOriginalFilename(),
                     upload.getLocation().getBucket(),
                     upload.getLocation().getObject(),
-                    upload.getURL().toString());
+                    upload.getURL().toString()
+            );
         } catch (IOException exception) {
             log.error("[S3 Upload Fail] : {}", exception.getMessage());
             throw new CustomException(CustomResponseStatus.S3_UPLOAD_FAIL);

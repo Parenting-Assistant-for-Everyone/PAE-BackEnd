@@ -27,8 +27,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3:3.1.0'
-	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
-
+	implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3:3.1.0'
+	implementation 'software.amazon.awssdk:s3-transfer-manager:2.25.28'
+	implementation 'software.amazon.awssdk.crt:aws-crt:0.29.9'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'

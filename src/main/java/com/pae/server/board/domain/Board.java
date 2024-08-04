@@ -2,6 +2,7 @@ package com.pae.server.board.domain;
 
 import com.pae.server.common.domain.BaseEntity;
 import com.pae.server.common.enums.BaseStatus;
+import com.pae.server.image.domain.Image;
 import com.pae.server.like.domain.Like;
 import com.pae.server.member.domain.Member;
 import jakarta.persistence.*;
@@ -9,9 +10,13 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -35,6 +40,7 @@ public abstract class Board extends BaseEntity {
     private String content;
 
     @Enumerated(EnumType.STRING)
+    @ColumnDefault("'ACTIVATE'")
     private BaseStatus baseStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -68,5 +74,15 @@ public abstract class Board extends BaseEntity {
     }
     public void incrementViewCount(){
         this.viewCount+=1;
+    }
+
+    public Set<String> getAllImageNames() {
+        return images.stream()
+                .map(image -> image.getPhotoData().getOriginalName())
+                .collect(Collectors.toSet());
+    }
+
+    public void deleteBoard() {
+        this.baseStatus = baseStatus.DEACTIVATE;
     }
 }
