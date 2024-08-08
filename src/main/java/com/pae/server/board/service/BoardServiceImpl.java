@@ -14,6 +14,8 @@ import com.pae.server.common.exception.CustomException;
 import com.pae.server.member.domain.Member;
 import com.pae.server.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,22 +53,23 @@ public class BoardServiceImpl implements BoardService {
 
     }
     @Override
-    public List<MatchingBoard> getMatchingBoardList() {
-        List<MatchingBoard> matchingBoardList = matchingBoardRepository.findAll();
+    public Page<MatchingBoard> getMatchingBoardList(Integer page) {
+        Page<MatchingBoard> matchingBoardList = matchingBoardRepository.findAll(PageRequest.of(page-1,10));
         return matchingBoardList;
     }
 
     //구직용 육아도우미 게시판 조회 메서드
     @Override
-    public List<MatchingBoard> getJobSearchList() {
-        List<MatchingBoard> matchingBoardList = matchingBoardRepository.findAllByBoardType(BoardType.SEARCH);
+    public Page<MatchingBoard> getJobSearchList(Integer page) {
+        Page<MatchingBoard> matchingBoardList = matchingBoardRepository.findAllByBoardType(BoardType.SEARCH,PageRequest.of(page-1,10));
         return matchingBoardList;
     }
 
     @Override
-    public List<MatchingBoard> getJobOpenningList() {
-        List<MatchingBoard> matchingBoardList = matchingBoardRepository.findAllByBoardType(BoardType.OFFER);
-        return matchingBoardList;    }
+    public Page<MatchingBoard> getJobOpenningList(Integer page) {
+        Page<MatchingBoard> matchingBoardList = matchingBoardRepository.findAllByBoardType(BoardType.OFFER,PageRequest.of(page-1,10));
+        return matchingBoardList;
+    }
 
     @Override
     public MatchingBoard getMatchingBoard(Long boardId) {
@@ -75,21 +78,21 @@ public class BoardServiceImpl implements BoardService {
 
     //육아도우미 게시판 검색 기능
     @Override
-    public List<MatchingBoard> getSearchResult(String keyWord) {
-        List<MatchingBoard> matchingBoardList = matchingBoardRepository.findByTitleContainingOrContentContaining(keyWord, keyWord);
+    public Page<MatchingBoard> getSearchResult(String keyWord, Integer page) {
+        Page<MatchingBoard> matchingBoardList = matchingBoardRepository.findByTitleContainingOrContentContaining(keyWord, keyWord,PageRequest.of(page-1,10));
         return matchingBoardList;
     }
     //육아도우미 게시판 조회순 정렬
     @Override
-    public List<MatchingBoard> getViewCountResult(){
-        List<MatchingBoard> matchingBoardList = matchingBoardRepository.findAll(Sort.by(Sort.Direction.DESC,"viewCount"));
-        return matchingBoardList;
+    public Page<MatchingBoard> getViewCountResult(Integer page){
+        PageRequest pageRequest = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "viewCount"));
+        return matchingBoardRepository.findAll(pageRequest);
     }
     //육아도우미 게시판 최신순 정렬
     @Override
-    public List<MatchingBoard> getRecentResult() {
-        List<MatchingBoard> matchingBoardList = matchingBoardRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
-        return matchingBoardList;
+    public Page<MatchingBoard> getRecentResult(Integer page) {
+        PageRequest pageRequest = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
+        return matchingBoardRepository.findAll(pageRequest);
     }
 
     @Override

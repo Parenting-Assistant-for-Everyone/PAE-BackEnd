@@ -6,5 +6,5 @@ import lombok.Builder;
 import java.util.List;
 
 @Builder
-public record MatchingBoardListDto(List<UpdateMatchingBoardResDto> boardList, Integer size) {
+public record MatchingBoardListDto(List<UpdateMatchingBoardResDto> boardList, Integer size,int totalPages, long totalElement) {
 }

@@ -11,7 +11,9 @@ import com.pae.server.member.dto.request.CreateChildInformationReqDto;
 import com.pae.server.member.dto.request.LocationAuthReqDto;
 import com.pae.server.member.dto.request.MatchingReqDto;
 import com.pae.server.member.dto.response.*;
+import com.pae.server.member.service.ChildInformationService;
 import com.pae.server.member.service.ChildInformationServiceImpl;
+import com.pae.server.member.service.MemberService;
 import com.pae.server.member.service.MemberServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,8 +27,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class MemberController {
-    private final ChildInformationServiceImpl childInformationService;
-    private final MemberServiceImpl memberService;
+    private final ChildInformationService childInformationService;
+    private final MemberService memberService;
     //아이 정보 생성하기
     @PostMapping("/createChildInformation")
     public ApiResponse<CreateChildInformationResDto> createChildInformation(@RequestBody CreateChildInformationReqDto dto) {

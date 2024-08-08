@@ -7,6 +7,7 @@ import com.pae.server.like.converter.LikeConverter;
 import com.pae.server.like.domain.Like;
 import com.pae.server.like.dto.request.CreateLikeReqDto;
 import com.pae.server.like.dto.response.CreateLikeResDto;
+import com.pae.server.like.service.LikeService;
 import com.pae.server.like.service.LikeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Slf4j
 public class LikeController {
-    private final LikeServiceImpl likeService;
+    private final LikeService likeService;
     //게시판 좋아요(찜) 추가
     @PostMapping("/createLike")
     public ApiResponse<CreateLikeResDto> createLike(@RequestBody CreateLikeReqDto dto){
