@@ -1,13 +1,18 @@
-package com.pae.server.board.controller;
+package com.pae.server.board.controller.goods;
 
 import com.pae.server.board.dto.request.GoodsBoardModifyReqDto;
 import com.pae.server.board.dto.request.GoodsBoardRegistReqDto;
+import com.pae.server.board.dto.request.GoodsCategoryCond;
 import com.pae.server.board.dto.response.GoodsBoardRegistAndModifyRespDto;
+import com.pae.server.board.dto.response.GoodsBoardSimpleInfoDto;
 import com.pae.server.board.service.goods.GoodsBoardSerivce;
+import com.pae.server.board.service.goods.query.GoodsBoardQueryService;
 import com.pae.server.common.dto.ApiResponse;
 import com.pae.server.common.enums.CustomResponseStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +25,7 @@ import java.util.List;
 @Slf4j
 public class GoodsBoardController {
     private final GoodsBoardSerivce goodsBoardSerivce;
+    private final GoodsBoardQueryService goodsBoardQueryService;
 
     @PostMapping("/goods")
     public ResponseEntity<ApiResponse<GoodsBoardRegistAndModifyRespDto>> goodsBoardRegist(
@@ -47,5 +53,19 @@ public class GoodsBoardController {
     ) {
         goodsBoardSerivce.goodsBoardDelete(deleteGoodsId);
         return ResponseEntity.ok().body(ApiResponse.createSuccess("게시글 삭제 완료", CustomResponseStatus.SUCCESS));
+    }
+
+    /***
+     * 거래 게시글 목록 조회
+     */
+
+    @GetMapping("/goods")
+    public ResponseEntity<ApiResponse<Page<GoodsBoardSimpleInfoDto>>> queryGoods(
+            Pageable pageable,
+            @ModelAttribute GoodsCategoryCond queryCond
+    ) {
+        log.info("cond : {}", queryCond);
+        Page<GoodsBoardSimpleInfoDto> response = goodsBoardQueryService.queryGoods(pageable, queryCond);
+        return ResponseEntity.ok().body(ApiResponse.createSuccess(response, CustomResponseStatus.SUCCESS));
     }
 }

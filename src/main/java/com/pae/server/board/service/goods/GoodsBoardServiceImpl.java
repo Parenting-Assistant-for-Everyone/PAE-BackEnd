@@ -5,7 +5,7 @@ import com.pae.server.board.domain.GoodsBoard;
 import com.pae.server.board.dto.request.GoodsBoardModifyReqDto;
 import com.pae.server.board.dto.request.GoodsBoardRegistReqDto;
 import com.pae.server.board.dto.response.GoodsBoardRegistAndModifyRespDto;
-import com.pae.server.board.repository.GoodsBoardRepository;
+import com.pae.server.board.repository.goods.GoodsBoardRepository;
 import com.pae.server.common.enums.CustomResponseStatus;
 import com.pae.server.common.exception.CustomException;
 import com.pae.server.image.domain.Image;
@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor

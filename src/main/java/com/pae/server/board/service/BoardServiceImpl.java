@@ -27,6 +27,7 @@ public class BoardServiceImpl implements BoardService {
     private final MatchingBoardRepository matchingBoardRepository;
     private final MemberRepository memberRepository;
     private final AssistantRepository assistantRepository;
+
     @Override
     @Transactional
     public MatchingBoard createMatchingBoard(CreateMatchingBoardDto dto) {
@@ -39,17 +40,19 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     public MatchingBoard updateMatchingBoard(Long boardId, UpdateMatchingBoardDto dto) {
         MatchingBoard matchingBoard = (MatchingBoard) boardRepository.findById(boardId).get();
-        matchingBoard.update(dto.title(),dto.content(),dto.baseStatus());
+        matchingBoard.update(dto.title(), dto.content(), dto.baseStatus());
         return boardRepository.save(matchingBoard);
     }
+
     @Override
     @Transactional
-    public MatchingBoard deleteMatchingBoard(Long boardId){
+    public MatchingBoard deleteMatchingBoard(Long boardId) {
         MatchingBoard matchingBoard = (MatchingBoard) boardRepository.findById(boardId).get();
         boardRepository.delete(matchingBoard);
         return matchingBoard;
 
     }
+
     @Override
     public List<MatchingBoard> getMatchingBoardList() {
         List<MatchingBoard> matchingBoardList = matchingBoardRepository.findAll();
@@ -66,7 +69,8 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public List<MatchingBoard> getJobOpenningList() {
         List<MatchingBoard> matchingBoardList = matchingBoardRepository.findAllByBoardType(BoardType.OFFER);
-        return matchingBoardList;    }
+        return matchingBoardList;
+    }
 
     @Override
     public MatchingBoard getMatchingBoard(Long boardId) {
@@ -79,12 +83,14 @@ public class BoardServiceImpl implements BoardService {
         List<MatchingBoard> matchingBoardList = matchingBoardRepository.findByTitleContainingOrContentContaining(keyWord, keyWord);
         return matchingBoardList;
     }
+
     //육아도우미 게시판 조회순 정렬
     @Override
-    public List<MatchingBoard> getViewCountResult(){
-        List<MatchingBoard> matchingBoardList = matchingBoardRepository.findAll(Sort.by(Sort.Direction.DESC,"viewCount"));
+    public List<MatchingBoard> getViewCountResult() {
+        List<MatchingBoard> matchingBoardList = matchingBoardRepository.findAll(Sort.by(Sort.Direction.DESC, "viewCount"));
         return matchingBoardList;
     }
+
     //육아도우미 게시판 최신순 정렬
     @Override
     public List<MatchingBoard> getRecentResult() {
@@ -94,15 +100,13 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public Member getMemberProfile(Long boardId) {
-        if(!matchingBoardRepository.existsById(boardId)){
+        if (!matchingBoardRepository.existsById(boardId)) {
             throw new CustomException(CustomResponseStatus.BOARD_NOT_FOUND);
-        }
-        else{
+        } else {
             MatchingBoard matchingBoard = matchingBoardRepository.findById(boardId).get();
-            if(matchingBoard.getBoardType()!=BoardType.OFFER){
+            if (matchingBoard.getBoardType() != BoardType.OFFER) {
                 throw new CustomException(CustomResponseStatus.NOT_OFFER_BOARD);
-            }
-            else{
+            } else {
                 Member member = memberRepository.findById(matchingBoard.getMember().getId())
                         .orElseThrow(() -> new CustomException(CustomResponseStatus.MEMBER_NOT_FOUND));
                 return member;
@@ -112,15 +116,13 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public Assistant getAssistantProfile(Long boardId) {
-        if(!matchingBoardRepository.existsById(boardId)){
+        if (!matchingBoardRepository.existsById(boardId)) {
             throw new CustomException(CustomResponseStatus.BOARD_NOT_FOUND);
-        }
-        else{
+        } else {
             MatchingBoard matchingBoard = matchingBoardRepository.findById(boardId).get();
-            if(matchingBoard.getBoardType()!=BoardType.OFFER){
+            if (matchingBoard.getBoardType() != BoardType.OFFER) {
                 throw new CustomException(CustomResponseStatus.NOT_OFFER_BOARD);
-            }
-            else{
+            } else {
                 Assistant assistant = assistantRepository.findById(matchingBoard.getMember().getId())
                         .orElseThrow(() -> new CustomException(CustomResponseStatus.ASSISTANT_NOT_FOUND));
                 return assistant;

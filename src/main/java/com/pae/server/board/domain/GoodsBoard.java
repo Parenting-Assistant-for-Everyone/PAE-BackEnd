@@ -12,6 +12,9 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @SuperBuilder
@@ -30,7 +33,7 @@ public class GoodsBoard extends Board{
     @Column(nullable = false)
     private SaleStatus saleStatus;
 
-    @Column(nullable = false)
+    // 무료나눔의 경우 price가 null로 들어가게 됨.
     private Long price;
 
     @Column(nullable = false)
@@ -49,5 +52,29 @@ public class GoodsBoard extends Board{
 
     public void deleteBoard() {
         super.deleteBoard();
+    }
+
+    public String getPriceBySaleType() {
+        if (this.saleType == SaleType.SALE) {
+            return String.valueOf(this.price);
+        }
+        return "무료나눔";
+    }
+
+    public String getDaysAgo(LocalDateTime now) {
+        Duration duration = Duration.between(super.getCreatedAt(), now);
+        long minutes = duration.toMinutes();
+        long hours = duration.toHours();
+        long days = duration.toDays();
+
+        if (minutes < 1) {
+            return "방금 전";
+        } else if (minutes < 60) {
+            return minutes + "분 전";
+        } else if (hours < 24) {
+            return hours + "시간 전";
+        } else {
+            return days + "일 전";
+        }
     }
 }
