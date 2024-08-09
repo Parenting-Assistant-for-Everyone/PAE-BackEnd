@@ -3,6 +3,7 @@ package com.pae.server.board.controller.goods;
 import com.pae.server.board.dto.request.GoodsBoardModifyReqDto;
 import com.pae.server.board.dto.request.GoodsBoardRegistReqDto;
 import com.pae.server.board.dto.request.GoodsCategoryCond;
+import com.pae.server.board.dto.response.GoodsBoardDetailRespDto;
 import com.pae.server.board.dto.response.GoodsBoardRegistAndModifyRespDto;
 import com.pae.server.board.dto.response.GoodsBoardSimpleInfoDto;
 import com.pae.server.board.service.goods.GoodsBoardSerivce;
@@ -68,4 +69,17 @@ public class GoodsBoardController {
         Page<GoodsBoardSimpleInfoDto> response = goodsBoardQueryService.queryGoods(pageable, queryCond);
         return ResponseEntity.ok().body(ApiResponse.createSuccess(response, CustomResponseStatus.SUCCESS));
     }
+
+    /***
+     *  거래 게시글 상세 조회
+     */
+
+    @GetMapping("/goods/{goodsId}")
+    public ResponseEntity<ApiResponse<GoodsBoardDetailRespDto>> queryGoodsDetail(
+            @PathVariable Long goodsId
+    ) {
+        GoodsBoardDetailRespDto response = goodsBoardQueryService.queryGoodsDetail(goodsId);
+        return ResponseEntity.ok().body(ApiResponse.createSuccess(response, CustomResponseStatus.SUCCESS));
+    }
+
 }

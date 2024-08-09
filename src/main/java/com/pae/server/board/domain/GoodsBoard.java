@@ -40,6 +40,8 @@ public class GoodsBoard extends Board{
     @Enumerated(EnumType.STRING)
     private GoodsCategory goodsCategory;
 
+    // Todo : 게시글이 등록된 지역을 저장해야함
+
     public void moidfy(GoodsBoardModifyReqDto modifyDto) {
         setTitle(modifyDto.title());
         setContent(modifyDto.description());
