@@ -1,6 +1,7 @@
 package com.pae.server.board.repository.custom.goods;
 
 import com.pae.server.board.domain.GoodsBoard;
+import com.pae.server.board.domain.enums.GoodsCategory;
 import com.pae.server.board.domain.enums.SaleStatus;
 import com.pae.server.board.dto.request.GoodsCategoryCond;
 import com.pae.server.board.dto.response.GoodsBoardSimpleInfoDto;
@@ -45,7 +46,7 @@ public class GoodsBoardCustomRepositoryImpl implements GoodsBoardCustomRepositor
                 .leftJoin(goodsBoard.likes, like)
                 .where(
                         goodsBoard.saleStatus.in(SaleStatus.ON_SALE, SaleStatus.RESERVATION),
-                        categoryEq(categoryCond)
+                        categoryEq(categoryCond.category())
                 )
                 .groupBy(goodsBoard)
                 .fetch();
@@ -63,19 +64,19 @@ public class GoodsBoardCustomRepositoryImpl implements GoodsBoardCustomRepositor
                 .select(goodsBoard.count())
                 .from(goodsBoard)
                 .where(
-                        categoryEq(categoryCond)
+                        categoryEq(categoryCond.category())
                 );
-        if (countQuery==null) throw new CustomException(CustomResponseStatus.BOARD_NOT_FOUND);
+        if (countQuery == null) throw new CustomException(CustomResponseStatus.BOARD_NOT_FOUND);
 
         return PageableExecutionUtils.getPage(result, pageable, countQuery::fetchOne);
 
     }
 
-    private BooleanExpression categoryEq(GoodsCategoryCond categoryCond) {
-        if (categoryCond != null && categoryCond.category() != null) {
-            return goodsBoard.goodsCategory.eq(categoryCond.category());
-        } else {
-            return goodsBoard.goodsCategory.isNull();
-        }
+    private BooleanExpression categoryEq(GoodsCategory category) {
+        return category != null
+                ?
+                goodsBoard.goodsCategory.eq(category)
+                :
+                null;
     }
 }
