@@ -1,6 +1,6 @@
 package com.pae.server.board.repository.custom.goods;
 
-import com.pae.server.board.dto.request.GoodsCategoryCond;
+import com.pae.server.board.dto.request.GoodsQueryCond;
 import com.pae.server.board.dto.response.GoodsBoardSimpleInfoDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,7 +12,7 @@ public interface GoodsBoardCustomRepository {
      */
     Page<GoodsBoardSimpleInfoDto> queryGoods(
             Pageable pageable,
-            GoodsCategoryCond categoryCond
+            GoodsQueryCond goodsQueryCond
     );
 
 }

@@ -3,7 +3,7 @@ package com.pae.server.board.repository.custom.goods;
 import com.pae.server.board.domain.GoodsBoard;
 import com.pae.server.board.domain.enums.GoodsCategory;
 import com.pae.server.board.domain.enums.SaleStatus;
-import com.pae.server.board.dto.request.GoodsCategoryCond;
+import com.pae.server.board.dto.request.GoodsQueryCond;
 import com.pae.server.board.dto.response.GoodsBoardSimpleInfoDto;
 import com.pae.server.common.enums.CustomResponseStatus;
 import com.pae.server.common.exception.CustomException;
@@ -31,9 +31,9 @@ public class GoodsBoardCustomRepositoryImpl implements GoodsBoardCustomRepositor
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Page queryGoods(
+    public Page<GoodsBoardSimpleInfoDto> queryGoods(
             Pageable pageable,
-            GoodsCategoryCond categoryCond
+            GoodsQueryCond goodsQueryCond
     ) {
         NumberPath<Long> likeCount = Expressions.numberPath(Long.class, "likeCount");
 
@@ -46,11 +46,10 @@ public class GoodsBoardCustomRepositoryImpl implements GoodsBoardCustomRepositor
                 .leftJoin(goodsBoard.likes, like)
                 .where(
                         goodsBoard.saleStatus.in(SaleStatus.ON_SALE, SaleStatus.RESERVATION),
-                        categoryEq(categoryCond.category())
+                        categoryEq(goodsQueryCond.category())
                 )
                 .groupBy(goodsBoard)
                 .fetch();
-
 
         List<GoodsBoardSimpleInfoDto> result = new ArrayList<>();
         for (Tuple tuple : fetch) {
@@ -61,15 +60,14 @@ public class GoodsBoardCustomRepositoryImpl implements GoodsBoardCustomRepositor
         }
 
         JPAQuery<Long> countQuery = jpaQueryFactory
-                .select(goodsBoard.count())
+                .select(goodsBoard.countDistinct())
                 .from(goodsBoard)
                 .where(
-                        categoryEq(categoryCond.category())
+                        categoryEq(goodsQueryCond.category())
                 );
         if (countQuery == null) throw new CustomException(CustomResponseStatus.BOARD_NOT_FOUND);
 
         return PageableExecutionUtils.getPage(result, pageable, countQuery::fetchOne);
-
     }
 
     private BooleanExpression categoryEq(GoodsCategory category) {

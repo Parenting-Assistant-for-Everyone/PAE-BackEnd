@@ -2,7 +2,7 @@ package com.pae.server.board.controller.goods;
 
 import com.pae.server.board.dto.request.GoodsBoardModifyReqDto;
 import com.pae.server.board.dto.request.GoodsBoardRegistReqDto;
-import com.pae.server.board.dto.request.GoodsCategoryCond;
+import com.pae.server.board.dto.request.GoodsQueryCond;
 import com.pae.server.board.dto.response.GoodsBoardDetailRespDto;
 import com.pae.server.board.dto.response.GoodsBoardRegistAndModifyRespDto;
 import com.pae.server.board.dto.response.GoodsBoardSimpleInfoDto;
@@ -63,7 +63,7 @@ public class GoodsBoardController {
     @GetMapping("/goods")
     public ResponseEntity<ApiResponse<Page<GoodsBoardSimpleInfoDto>>> queryGoods(
             Pageable pageable,
-            @ModelAttribute GoodsCategoryCond queryCond
+            @ModelAttribute GoodsQueryCond queryCond
     ) {
         log.info("cond : {}", queryCond);
         Page<GoodsBoardSimpleInfoDto> response = goodsBoardQueryService.queryGoods(pageable, queryCond);
