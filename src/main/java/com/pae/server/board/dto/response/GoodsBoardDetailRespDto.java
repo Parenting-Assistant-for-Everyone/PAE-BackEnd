@@ -11,7 +11,7 @@ public record GoodsBoardDetailRespDto(
         Long boardId,
 
         String nickname,
-//        String profileUrl,
+        String profileUrl,
 
         String title,
         String category,
