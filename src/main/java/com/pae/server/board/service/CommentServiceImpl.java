@@ -16,7 +16,7 @@ import java.util.Optional;
 public class CommentServiceImpl implements CommentService{
 
     private final CommentRepository commentRepository;
-    private final BoardServiceImpl boardService;
+    private final BoardService boardService;
     @Override
     @Transactional
     public Comment createComment(CommentReqDto commentReqDto) {

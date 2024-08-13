@@ -47,7 +47,7 @@ public abstract class Board extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "board")
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE) // cascade 설정 추가
     private List<Comment> comments = new ArrayList<>();
     @OneToMany(mappedBy = "board")
     private List<Image> images = new ArrayList<>();

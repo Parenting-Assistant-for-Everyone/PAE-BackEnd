@@ -18,7 +18,7 @@ public class Comment extends BaseEntity {
     @Column(length = 30)
     private String path;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "board_id")
     private Board board;
     public void setBoard(Board board){

@@ -7,6 +7,7 @@ import com.pae.server.board.domain.MatchingBoard;
 import com.pae.server.board.dto.request.CreateMatchingBoardDto;
 import com.pae.server.board.dto.request.UpdateMatchingBoardDto;
 import com.pae.server.board.dto.response.*;
+import com.pae.server.board.service.BoardService;
 import com.pae.server.board.service.BoardServiceImpl;
 import com.pae.server.common.dto.ApiResponse;
 import com.pae.server.common.enums.CustomResponseStatus;
@@ -15,6 +16,7 @@ import com.pae.server.member.domain.Member;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,8 +25,10 @@ import java.util.List;
 @RequestMapping("/board")
 @RequiredArgsConstructor
 @Slf4j
+@CrossOrigin(origins = "http://localhost:19000") // React Native 앱의 URL을 여기에 추가합니다.
+
 public class BoardController {
-    private final BoardServiceImpl boardService;
+    private final BoardService boardService;
 
     //육아 도우미 게시판 생성
     @PostMapping("/create")
@@ -49,20 +53,20 @@ public class BoardController {
 
     //육아 도우미 게시판 리스트 조회
     @GetMapping("/matchingBoardList")
-    public ApiResponse<MatchingBoardListDto> getMatchingBoardList(){
-        List<MatchingBoard>  matchingBoardList = boardService.getMatchingBoardList();
+    public ApiResponse<MatchingBoardListDto> getMatchingBoardList(@RequestParam(name="page")Integer page){
+        Page<MatchingBoard> matchingBoardList = boardService.getMatchingBoardList(page);
         return ApiResponse.createSuccess(BoardConverter.getMatchingBoardList(matchingBoardList) ,CustomResponseStatus.SUCCESS);
     }
     //구직용 육아도우미 게시판 리스트 조회
     @GetMapping("/matchingBoardList/jobSearch")
-    public ApiResponse<MatchingBoardListDto> getJobSearchList(){
-        List<MatchingBoard> jobSearchList = boardService.getJobSearchList();
+    public ApiResponse<MatchingBoardListDto> getJobSearchList(@RequestParam(name="page")Integer page){
+        Page<MatchingBoard> jobSearchList = boardService.getJobSearchList(page);
         return ApiResponse.createSuccess(BoardConverter.getMatchingBoardList(jobSearchList) ,CustomResponseStatus.SUCCESS);
     }
     //구인용 육아도우미 게시판 리스트 조회
     @GetMapping("/matchingBoardList/jobOpening")
-    public ApiResponse<MatchingBoardListDto> getJobOpeningList(){
-        List<MatchingBoard> jobOpenningList = boardService.getJobOpenningList();
+    public ApiResponse<MatchingBoardListDto> getJobOpeningList(@RequestParam(name="page")Integer page){
+        Page<MatchingBoard> jobOpenningList = boardService.getJobOpenningList(page);
         return ApiResponse.createSuccess(BoardConverter.getMatchingBoardList(jobOpenningList) ,CustomResponseStatus.SUCCESS);
     }
 
@@ -76,20 +80,20 @@ public class BoardController {
 
     //육아도우미 게시판 검색 기능
     @GetMapping("/search")
-    public ApiResponse<MatchingBoardListDto> getSearchResult(@RequestParam("keyword") String keyWord){
-        List<MatchingBoard> searchResult = boardService.getSearchResult(keyWord);
+    public ApiResponse<MatchingBoardListDto> getSearchResult(@RequestParam("keyword") String keyWord, @RequestParam(name="page")Integer page){
+        Page<MatchingBoard> searchResult = boardService.getSearchResult(keyWord, page);
         return ApiResponse.createSuccess(BoardConverter.getMatchingBoardList(searchResult),CustomResponseStatus.SUCCESS);
     }
     //육아도우미 게시판 조회순 정렬
     @GetMapping("/getView")
-    public ApiResponse<MatchingBoardListDto> getViewCountResult(){
-        List<MatchingBoard> result = boardService.getViewCountResult();
+    public ApiResponse<MatchingBoardListDto> getViewCountResult(@RequestParam(name="page")Integer page){
+        Page<MatchingBoard> result = boardService.getViewCountResult(page);
         return ApiResponse.createSuccess(BoardConverter.getMatchingBoardList(result),CustomResponseStatus.SUCCESS);
     }
     //육아도우미 게시판 최신순 정렬
     @GetMapping("/getRecent")
-    public ApiResponse<MatchingBoardListDto> getRecentResult(){
-        List<MatchingBoard> result = boardService.getRecentResult();
+    public ApiResponse<MatchingBoardListDto> getRecentResult(@RequestParam(name="page")Integer page){
+        Page<MatchingBoard> result = boardService.getRecentResult(page);
         return ApiResponse.createSuccess(BoardConverter.getMatchingBoardList(result),CustomResponseStatus.SUCCESS);
     }
     //육아도우미 구인글 작성자 프로필 조회

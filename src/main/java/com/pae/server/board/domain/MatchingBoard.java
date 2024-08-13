@@ -24,6 +24,5 @@ public class MatchingBoard extends Board{
         this.setTitle(title);
         this.setContent(content);
         this.setBaseStatus(baseStatus);
-
     }
 }
