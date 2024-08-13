@@ -15,6 +15,7 @@ import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
@@ -28,6 +29,7 @@ import static com.pae.server.like.domain.QLike.*;
 
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class GoodsBoardCustomRepositoryImpl implements GoodsBoardCustomRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
@@ -99,6 +101,40 @@ public class GoodsBoardCustomRepositoryImpl implements GoodsBoardCustomRepositor
                 .from(like)
                 .where(like.member.id.eq(queryMemberId));
         if (countQuery == null) throw new CustomException(CustomResponseStatus.BOARD_NOT_FOUND);
+
+        return PageableExecutionUtils.getPage(result, pageable, countQuery::fetchOne);
+    }
+
+    @Override
+    public Page<GoodsBoardSimpleInfoDto> queryMyGoods(Pageable pageable, Long queryMemberId) {
+        NumberPath<Long> likeCount = Expressions.numberPath(Long.class, "likeCount");
+
+        List<Tuple> fetch = jpaQueryFactory
+                .select(
+                        goodsBoard,
+                        like.countDistinct().as(likeCount)
+                )
+                .from(goodsBoard)
+                .leftJoin(goodsBoard.likes, like)
+                .where(goodsBoard.member.id.eq(queryMemberId))
+                .groupBy(goodsBoard)
+                .fetch();
+
+        List<GoodsBoardSimpleInfoDto> result = new ArrayList<>();
+        for (Tuple tuple : fetch) {
+            GoodsBoard goods = tuple.get(goodsBoard);
+            Long likeNum = tuple.get(likeCount);
+            log.info("likeNUm : {}" , likeNum);
+
+
+            result.add(GoodsBoardSimpleInfoDto.of(goods, Math.toIntExact(likeNum)));
+        }
+
+        JPAQuery<Long> countQuery = jpaQueryFactory
+                .select(goodsBoard.countDistinct())
+                .from(goodsBoard)
+                .where(goodsBoard.member.id.eq(queryMemberId));
+        if (countQuery.fetchOne() == null) throw new CustomException(CustomResponseStatus.BOARD_NOT_FOUND);
 
         return PageableExecutionUtils.getPage(result, pageable, countQuery::fetchOne);
     }

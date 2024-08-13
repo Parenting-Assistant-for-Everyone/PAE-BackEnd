@@ -21,4 +21,9 @@ public interface GoodsBoardQueryService {
             Pageable pageable,
             Long queryMemberId
     );
+
+    Page<GoodsBoardSimpleInfoDto> queryMyGoods(
+            Pageable pageable,
+            Long queryMemberId
+    );
 }

@@ -41,4 +41,9 @@ public class GoodsBoardQueryServiceImpl implements GoodsBoardQueryService {
     public Page<GoodsBoardSimpleInfoDto> queryLikeGoods(Pageable pageable, Long queryMemberId) {
         return goodsBoardRepository.queryLikeGoods(pageable, queryMemberId);
     }
+
+    @Override
+    public Page<GoodsBoardSimpleInfoDto> queryMyGoods(Pageable pageable, Long queryMemberId) {
+        return goodsBoardRepository.queryMyGoods(pageable, queryMemberId);
+    }
 }
