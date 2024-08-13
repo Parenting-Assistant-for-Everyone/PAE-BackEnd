@@ -7,5 +7,6 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 
 @Builder
-public record UpdateMatchingBoardResDto(Long id, String title, String content, Integer viewCount ,BaseStatus baseStatus, BoardType boardType){
+public record UpdateMatchingBoardResDto(Long id, String title, String content, Integer viewCount ,BaseStatus baseStatus
+        , BoardType boardType,String updatedAt, String writer, Integer likes, Integer comments){
 }

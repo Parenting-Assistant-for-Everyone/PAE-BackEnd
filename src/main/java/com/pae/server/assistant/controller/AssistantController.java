@@ -1,5 +1,6 @@
 package com.pae.server.assistant.controller;
 
+import com.pae.server.assistant.service.AssistantService;
 import com.pae.server.assistant.service.AssistantServiceImpl;
 import com.pae.server.common.dto.ApiResponse;
 import com.pae.server.common.enums.CustomResponseStatus;
@@ -7,6 +8,7 @@ import com.pae.server.member.converter.MemberConverter;
 import com.pae.server.member.dto.request.LocationAuthReqDto;
 import com.pae.server.member.dto.response.LocationAuthResDto;
 import com.pae.server.member.dto.response.NeighborhoodFinderResDto;
+import com.pae.server.member.service.MemberService;
 import com.pae.server.member.service.MemberServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +21,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class AssistantController {
-    private final MemberServiceImpl memberService;
-    private final AssistantServiceImpl assistantService;
+    private final MemberService memberService;
+    private final AssistantService assistantService;
     @PostMapping("/getAddress")
     public ApiResponse<String> getAddress(@RequestBody LocationAuthReqDto dto){
         String address = memberService.getAddress(dto,0);
