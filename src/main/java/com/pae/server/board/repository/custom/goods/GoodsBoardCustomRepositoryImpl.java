@@ -44,6 +44,7 @@ public class GoodsBoardCustomRepositoryImpl implements GoodsBoardCustomRepositor
                 .select(
                         goodsBoard,
                         like.countDistinct().as(likeCount)
+                        // Todo : 채팅방 개수도 select 해와야함.
                 )
                 .from(goodsBoard)
                 .leftJoin(goodsBoard.likes, like)
@@ -54,13 +55,7 @@ public class GoodsBoardCustomRepositoryImpl implements GoodsBoardCustomRepositor
                 .groupBy(goodsBoard)
                 .fetch();
 
-        List<GoodsBoardSimpleInfoDto> result = new ArrayList<>();
-        for (Tuple tuple : fetch) {
-            GoodsBoard goods = tuple.get(goodsBoard);
-            Long likeNum = tuple.get(likeCount);
-
-            result.add(GoodsBoardSimpleInfoDto.of(goods, Math.toIntExact(likeNum)));
-        }
+        List<GoodsBoardSimpleInfoDto> result = generateGoodsSimpleInfoDtoList(fetch, likeCount);
 
         JPAQuery<Long> countQuery = jpaQueryFactory
                 .select(goodsBoard.countDistinct())
@@ -68,7 +63,7 @@ public class GoodsBoardCustomRepositoryImpl implements GoodsBoardCustomRepositor
                 .where(
                         categoryEq(goodsQueryCond.category())
                 );
-        if (countQuery == null) throw new CustomException(CustomResponseStatus.BOARD_NOT_FOUND);
+        validCountQuery(countQuery);
 
         return PageableExecutionUtils.getPage(result, pageable, countQuery::fetchOne);
     }
@@ -81,6 +76,7 @@ public class GoodsBoardCustomRepositoryImpl implements GoodsBoardCustomRepositor
                 .select(
                         goodsBoard,
                         like.countDistinct().as(likeCount)
+                        // Todo : 채팅방 개수도 select 해와야함.
                 )
                 .from(like)
                 .leftJoin(like.board.as(QGoodsBoard.class), goodsBoard)
@@ -88,19 +84,13 @@ public class GoodsBoardCustomRepositoryImpl implements GoodsBoardCustomRepositor
                 .groupBy(goodsBoard)
                 .fetch();
 
-        List<GoodsBoardSimpleInfoDto> result = new ArrayList<>();
-        for (Tuple tuple : fetch) {
-            GoodsBoard goods = tuple.get(goodsBoard);
-            Long likeNum = tuple.get(likeCount);
-
-            result.add(GoodsBoardSimpleInfoDto.of(goods, Math.toIntExact(likeNum)));
-        }
+        List<GoodsBoardSimpleInfoDto> result = generateGoodsSimpleInfoDtoList(fetch, likeCount);
 
         JPAQuery<Long> countQuery = jpaQueryFactory
                 .select(goodsBoard.countDistinct())
                 .from(like)
                 .where(like.member.id.eq(queryMemberId));
-        if (countQuery == null) throw new CustomException(CustomResponseStatus.BOARD_NOT_FOUND);
+        validCountQuery(countQuery);
 
         return PageableExecutionUtils.getPage(result, pageable, countQuery::fetchOne);
     }
@@ -113,6 +103,7 @@ public class GoodsBoardCustomRepositoryImpl implements GoodsBoardCustomRepositor
                 .select(
                         goodsBoard,
                         like.countDistinct().as(likeCount)
+                        // Todo : 채팅방 개수도 select 해와야함.
                 )
                 .from(goodsBoard)
                 .leftJoin(goodsBoard.likes, like)
@@ -120,23 +111,27 @@ public class GoodsBoardCustomRepositoryImpl implements GoodsBoardCustomRepositor
                 .groupBy(goodsBoard)
                 .fetch();
 
-        List<GoodsBoardSimpleInfoDto> result = new ArrayList<>();
-        for (Tuple tuple : fetch) {
-            GoodsBoard goods = tuple.get(goodsBoard);
-            Long likeNum = tuple.get(likeCount);
-            log.info("likeNUm : {}" , likeNum);
-
-
-            result.add(GoodsBoardSimpleInfoDto.of(goods, Math.toIntExact(likeNum)));
-        }
+        List<GoodsBoardSimpleInfoDto> result = generateGoodsSimpleInfoDtoList(fetch, likeCount);
 
         JPAQuery<Long> countQuery = jpaQueryFactory
                 .select(goodsBoard.countDistinct())
                 .from(goodsBoard)
                 .where(goodsBoard.member.id.eq(queryMemberId));
-        if (countQuery.fetchOne() == null) throw new CustomException(CustomResponseStatus.BOARD_NOT_FOUND);
+        validCountQuery(countQuery);
 
         return PageableExecutionUtils.getPage(result, pageable, countQuery::fetchOne);
+    }
+
+    private List<GoodsBoardSimpleInfoDto> generateGoodsSimpleInfoDtoList(List<Tuple> boardInfos, NumberPath<Long> likeCount) {
+        List<GoodsBoardSimpleInfoDto> simpleInfoDtos = new ArrayList<>();
+        for (Tuple tuple : boardInfos) {
+            GoodsBoard goods = tuple.get(goodsBoard);
+            Long likeNum = tuple.get(likeCount);
+
+            simpleInfoDtos.add(GoodsBoardSimpleInfoDto.of(goods, Math.toIntExact(likeNum)));
+        }
+
+        return simpleInfoDtos;
     }
 
     private BooleanExpression categoryEq(GoodsCategory category) {
@@ -145,5 +140,9 @@ public class GoodsBoardCustomRepositoryImpl implements GoodsBoardCustomRepositor
                 goodsBoard.goodsCategory.eq(category)
                 :
                 null;
+    }
+
+    private void validCountQuery(JPAQuery<Long> countQuery) {
+        if (countQuery.fetchOne() == null) throw new CustomException(CustomResponseStatus.BOARD_NOT_FOUND);
     }
 }
