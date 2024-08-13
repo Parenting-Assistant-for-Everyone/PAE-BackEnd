@@ -6,18 +6,14 @@ import com.pae.server.common.enums.CustomResponseStatus;
 import com.pae.server.member.converter.ChildInformationConverter;
 import com.pae.server.member.converter.MemberConverter;
 import com.pae.server.member.domain.ChildInformation;
-import com.pae.server.member.domain.Member;
 import com.pae.server.member.dto.request.CreateChildInformationReqDto;
 import com.pae.server.member.dto.request.LocationAuthReqDto;
 import com.pae.server.member.dto.request.MatchingReqDto;
 import com.pae.server.member.dto.response.*;
 import com.pae.server.member.service.ChildInformationService;
-import com.pae.server.member.service.ChildInformationServiceImpl;
 import com.pae.server.member.service.MemberService;
-import com.pae.server.member.service.MemberServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
