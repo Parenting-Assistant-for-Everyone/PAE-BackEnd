@@ -63,7 +63,7 @@ public class GoodsBoardCustomRepositoryImpl implements GoodsBoardCustomRepositor
                 .where(
                         categoryEq(goodsQueryCond.category())
                 );
-        validCountQuery(countQuery);
+        if (countQuery.fetchOne() == null) throw new CustomException(CustomResponseStatus.BOARD_NOT_FOUND);
 
         return PageableExecutionUtils.getPage(result, pageable, countQuery::fetchOne);
     }
@@ -90,7 +90,7 @@ public class GoodsBoardCustomRepositoryImpl implements GoodsBoardCustomRepositor
                 .select(goodsBoard.countDistinct())
                 .from(like)
                 .where(like.member.id.eq(queryMemberId));
-        validCountQuery(countQuery);
+        if (countQuery == null) throw new CustomException(CustomResponseStatus.BOARD_NOT_FOUND);
 
         return PageableExecutionUtils.getPage(result, pageable, countQuery::fetchOne);
     }
@@ -117,7 +117,7 @@ public class GoodsBoardCustomRepositoryImpl implements GoodsBoardCustomRepositor
                 .select(goodsBoard.countDistinct())
                 .from(goodsBoard)
                 .where(goodsBoard.member.id.eq(queryMemberId));
-        validCountQuery(countQuery);
+        if (countQuery == null) throw new CustomException(CustomResponseStatus.BOARD_NOT_FOUND);
 
         return PageableExecutionUtils.getPage(result, pageable, countQuery::fetchOne);
     }
@@ -140,9 +140,5 @@ public class GoodsBoardCustomRepositoryImpl implements GoodsBoardCustomRepositor
                 goodsBoard.goodsCategory.eq(category)
                 :
                 null;
-    }
-
-    private void validCountQuery(JPAQuery<Long> countQuery) {
-        if (countQuery.fetchOne() == null) throw new CustomException(CustomResponseStatus.BOARD_NOT_FOUND);
     }
 }
