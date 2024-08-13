@@ -15,4 +15,19 @@ public interface GoodsBoardCustomRepository {
             GoodsQueryCond goodsQueryCond
     );
 
+    /***
+     * 찜한 거래 게시판 목록 조회
+     */
+    Page<GoodsBoardSimpleInfoDto> queryLikeGoods(
+            Pageable pageable,
+            Long queryMemberId
+    );
+
+    /***
+     * 자신의 거래 게시글 목록 조회
+     */
+    Page<GoodsBoardSimpleInfoDto> queryMyGoods(
+            Pageable pageable,
+            Long queryMemberId
+    );
 }
