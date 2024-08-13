@@ -10,6 +10,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.file.AccessDeniedException;
 import java.util.Map;
 
@@ -33,11 +35,15 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler({CustomException.class, Exception.class})
     public ResponseEntity<ApiResponse<String>> handleException(Exception e) {
-        log.error(e.getMessage());
         if (!(e instanceof CustomException custom)) {
+            String stackTrace = getStackTraceAsString(e);
+            log.error("[ERROR] : {}\n{}", e.getMessage(), stackTrace);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(ApiResponse.createError(CustomResponseStatus.INTERNAL_SERVER_ERROR));
         }
+
+        String stackTrace = getStackTraceAsString(e);
+        log.error("[ERROR] : {}\n{}", e.getMessage(), stackTrace);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ApiResponse.createError(custom.getCustomResponseStatus()));
     }
@@ -53,4 +59,10 @@ public class CustomExceptionHandler {
                 .body(ApiResponse.createError(e.getCustomResponseStatus()));
     }
 
+    private String getStackTraceAsString(Throwable e) {
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(stringWriter);
+        e.printStackTrace(printWriter);
+        return stringWriter.toString();
+    }
 }

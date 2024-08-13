@@ -19,6 +19,7 @@ public enum CustomResponseStatus {
     NOT_OFFER_BOARD(HttpStatus.INTERNAL_SERVER_ERROR.value(), "6014","구인게시글이 아닙니다."),
     MEMBER_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR.value(),"6021","멤버가 존재하지 않습니다."),
     ASSISTANT_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR.value(),"6022","육아도우미가 존재하지 않습니다."),
+    IMAGE_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR.value(),"6023","이미지가 존재하지 않습니다."),
 
     CHILD_ASSISTANT_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR.value(), "6024","육아도우미가 존재하지 않습니다."),
     CHILD_INFORMATION_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR.value(), "6031","아이 정보가 존재하지 않습니다"),

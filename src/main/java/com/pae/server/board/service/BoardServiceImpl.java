@@ -29,6 +29,7 @@ public class BoardServiceImpl implements BoardService {
     private final MatchingBoardRepository matchingBoardRepository;
     private final MemberRepository memberRepository;
     private final AssistantRepository assistantRepository;
+
     @Override
     @Transactional
     public MatchingBoard createMatchingBoard(CreateMatchingBoardDto dto) {
@@ -41,17 +42,19 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     public MatchingBoard updateMatchingBoard(Long boardId, UpdateMatchingBoardDto dto) {
         MatchingBoard matchingBoard = (MatchingBoard) boardRepository.findById(boardId).get();
-        matchingBoard.update(dto.title(),dto.content(),dto.baseStatus());
+        matchingBoard.update(dto.title(), dto.content(), dto.baseStatus());
         return boardRepository.save(matchingBoard);
     }
+
     @Override
     @Transactional
-    public MatchingBoard deleteMatchingBoard(Long boardId){
+    public MatchingBoard deleteMatchingBoard(Long boardId) {
         MatchingBoard matchingBoard = (MatchingBoard) boardRepository.findById(boardId).get();
         boardRepository.delete(matchingBoard);
         return matchingBoard;
 
     }
+
     @Override
     public Page<MatchingBoard> getMatchingBoardList(Integer page) {
         Page<MatchingBoard> matchingBoardList = matchingBoardRepository.findAll(PageRequest.of(page-1,10));
@@ -82,12 +85,14 @@ public class BoardServiceImpl implements BoardService {
         Page<MatchingBoard> matchingBoardList = matchingBoardRepository.findByTitleContainingOrContentContaining(keyWord, keyWord,PageRequest.of(page-1,10));
         return matchingBoardList;
     }
+
     //육아도우미 게시판 조회순 정렬
     @Override
     public Page<MatchingBoard> getViewCountResult(Integer page){
         PageRequest pageRequest = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "viewCount"));
         return matchingBoardRepository.findAll(pageRequest);
     }
+
     //육아도우미 게시판 최신순 정렬
     @Override
     public Page<MatchingBoard> getRecentResult(Integer page) {
@@ -97,15 +102,13 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public Member getMemberProfile(Long boardId) {
-        if(!matchingBoardRepository.existsById(boardId)){
+        if (!matchingBoardRepository.existsById(boardId)) {
             throw new CustomException(CustomResponseStatus.BOARD_NOT_FOUND);
-        }
-        else{
+        } else {
             MatchingBoard matchingBoard = matchingBoardRepository.findById(boardId).get();
-            if(matchingBoard.getBoardType()!=BoardType.OFFER){
+            if (matchingBoard.getBoardType() != BoardType.OFFER) {
                 throw new CustomException(CustomResponseStatus.NOT_OFFER_BOARD);
-            }
-            else{
+            } else {
                 Member member = memberRepository.findById(matchingBoard.getMember().getId())
                         .orElseThrow(() -> new CustomException(CustomResponseStatus.MEMBER_NOT_FOUND));
                 return member;
@@ -115,15 +118,13 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public Assistant getAssistantProfile(Long boardId) {
-        if(!matchingBoardRepository.existsById(boardId)){
+        if (!matchingBoardRepository.existsById(boardId)) {
             throw new CustomException(CustomResponseStatus.BOARD_NOT_FOUND);
-        }
-        else{
+        } else {
             MatchingBoard matchingBoard = matchingBoardRepository.findById(boardId).get();
-            if(matchingBoard.getBoardType()!=BoardType.OFFER){
+            if (matchingBoard.getBoardType() != BoardType.OFFER) {
                 throw new CustomException(CustomResponseStatus.NOT_OFFER_BOARD);
-            }
-            else{
+            } else {
                 Assistant assistant = assistantRepository.findById(matchingBoard.getMember().getId())
                         .orElseThrow(() -> new CustomException(CustomResponseStatus.ASSISTANT_NOT_FOUND));
                 return assistant;

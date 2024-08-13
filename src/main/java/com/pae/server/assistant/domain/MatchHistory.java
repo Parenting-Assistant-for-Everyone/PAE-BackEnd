@@ -5,7 +5,6 @@ import com.pae.server.common.domain.BaseEntity;
 import com.pae.server.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.*;
-import org.joda.time.DateTime;
 
 import java.time.LocalDate;
 

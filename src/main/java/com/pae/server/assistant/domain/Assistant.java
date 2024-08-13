@@ -5,7 +5,7 @@ import com.pae.server.assistant.domain.enums.AssistantType;
 import com.pae.server.assistant.domain.enums.CertificationStatus;
 import com.pae.server.assistant.domain.enums.PreferredActivity;
 import com.pae.server.common.domain.BaseEntity;
-import com.pae.server.image.domain.ImageData;
+import com.pae.server.image.domain.PhotoData;
 import com.pae.server.member.domain.enums.Gender;
 import jakarta.persistence.*;
 import lombok.*;
@@ -39,7 +39,7 @@ public class Assistant extends BaseEntity {
     @Column
     private double longitude; // 경도
     @Embedded
-    private ImageData imageData;
+    private PhotoData photoData;
     @Enumerated(EnumType.STRING)
     @Column(length = 10)
     private AssistantStatus assistantStatus;
