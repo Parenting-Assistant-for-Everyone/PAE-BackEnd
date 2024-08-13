@@ -82,4 +82,16 @@ public class GoodsBoardController {
         return ResponseEntity.ok().body(ApiResponse.createSuccess(response, CustomResponseStatus.SUCCESS));
     }
 
+    /***
+     * 찜한 거래 게시글 목록 조회
+     */
+
+    @GetMapping("/goods/like")
+    public ResponseEntity<ApiResponse<Page<GoodsBoardSimpleInfoDto>>> queryLikeGoods(
+            Pageable pageable
+    ) {
+        // Todo: 추후 @Authenticaion... 을 통해서 memberId를 얻어오도록 변경해얗마.
+        Page<GoodsBoardSimpleInfoDto> response = goodsBoardQueryService.queryLikeGoods(pageable, 1L);
+        return ResponseEntity.ok().body(ApiResponse.createSuccess(response, CustomResponseStatus.SUCCESS));
+    }
 }

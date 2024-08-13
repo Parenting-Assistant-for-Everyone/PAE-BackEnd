@@ -16,4 +16,9 @@ public interface GoodsBoardQueryService {
     GoodsBoardDetailRespDto queryGoodsDetail(
             Long goodsBoardId
     );
+
+    Page<GoodsBoardSimpleInfoDto> queryLikeGoods(
+            Pageable pageable,
+            Long queryMemberId
+    );
 }

@@ -8,6 +8,8 @@ import java.util.List;
 
 @Builder
 public record GoodsBoardDetailRespDto(
+        Long boardId,
+
         String nickname,
 //        String profileUrl,
 
@@ -25,6 +27,7 @@ public record GoodsBoardDetailRespDto(
 ) {
     public static GoodsBoardDetailRespDto from(GoodsBoard goods) {
         return GoodsBoardDetailRespDto.builder()
+                .boardId(goods.getId())
                 .nickname(goods.getMember().getNickname())
 //                .profileUrl(goods.getMember())
                 .title(goods.getTitle())

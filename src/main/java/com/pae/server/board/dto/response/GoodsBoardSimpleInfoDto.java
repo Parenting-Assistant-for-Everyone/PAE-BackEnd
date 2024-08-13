@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 @Builder
 public record GoodsBoardSimpleInfoDto(
+        Long boardId,
         String title,
         String daysAgo,
         String price,
@@ -18,6 +19,7 @@ public record GoodsBoardSimpleInfoDto(
 ) {
     public static GoodsBoardSimpleInfoDto of(GoodsBoard goodsBoard, Integer likeNum) {
         return GoodsBoardSimpleInfoDto.builder()
+                .boardId(goodsBoard.getId())
                 .title(goodsBoard.getTitle())
                 .daysAgo(goodsBoard.getDaysAgo(LocalDateTime.now()))
                 .price(goodsBoard.getPriceBySaleType())

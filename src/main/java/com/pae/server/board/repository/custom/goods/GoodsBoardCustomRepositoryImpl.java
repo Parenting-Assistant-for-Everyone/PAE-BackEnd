@@ -1,6 +1,7 @@
 package com.pae.server.board.repository.custom.goods;
 
 import com.pae.server.board.domain.GoodsBoard;
+import com.pae.server.board.domain.QGoodsBoard;
 import com.pae.server.board.domain.enums.GoodsCategory;
 import com.pae.server.board.domain.enums.SaleStatus;
 import com.pae.server.board.dto.request.GoodsQueryCond;
@@ -65,6 +66,38 @@ public class GoodsBoardCustomRepositoryImpl implements GoodsBoardCustomRepositor
                 .where(
                         categoryEq(goodsQueryCond.category())
                 );
+        if (countQuery == null) throw new CustomException(CustomResponseStatus.BOARD_NOT_FOUND);
+
+        return PageableExecutionUtils.getPage(result, pageable, countQuery::fetchOne);
+    }
+
+    @Override
+    public Page<GoodsBoardSimpleInfoDto> queryLikeGoods(Pageable pageable, Long queryMemberId) {
+        NumberPath<Long> likeCount = Expressions.numberPath(Long.class, "likeCount");
+
+        List<Tuple> fetch = jpaQueryFactory
+                .select(
+                        goodsBoard,
+                        like.countDistinct().as(likeCount)
+                )
+                .from(like)
+                .leftJoin(like.board.as(QGoodsBoard.class), goodsBoard)
+                .where(like.member.id.eq(queryMemberId))
+                .groupBy(goodsBoard)
+                .fetch();
+
+        List<GoodsBoardSimpleInfoDto> result = new ArrayList<>();
+        for (Tuple tuple : fetch) {
+            GoodsBoard goods = tuple.get(goodsBoard);
+            Long likeNum = tuple.get(likeCount);
+
+            result.add(GoodsBoardSimpleInfoDto.of(goods, Math.toIntExact(likeNum)));
+        }
+
+        JPAQuery<Long> countQuery = jpaQueryFactory
+                .select(goodsBoard.countDistinct())
+                .from(like)
+                .where(like.member.id.eq(queryMemberId));
         if (countQuery == null) throw new CustomException(CustomResponseStatus.BOARD_NOT_FOUND);
 
         return PageableExecutionUtils.getPage(result, pageable, countQuery::fetchOne);
