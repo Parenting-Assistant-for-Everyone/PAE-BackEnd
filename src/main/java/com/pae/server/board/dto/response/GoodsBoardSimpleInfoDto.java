@@ -12,10 +12,10 @@ public record GoodsBoardSimpleInfoDto(
         String daysAgo,
         String price,
         int likeNum,
-        String saleStatus
-//        String thumbnailUrl
-//        int chattingNum,
-//        String address,
+        String saleStatus,
+        String thumbnailUrl,
+        int chattingNum,
+        String address
 ) {
     public static GoodsBoardSimpleInfoDto of(GoodsBoard goodsBoard, Integer likeNum) {
         return GoodsBoardSimpleInfoDto.builder()
@@ -25,6 +25,9 @@ public record GoodsBoardSimpleInfoDto(
                 .price(goodsBoard.getPriceBySaleType())
                 .saleStatus(goodsBoard.getSaleStatus().toString())
                 .likeNum(likeNum)
+//                .thumbnailUrl(null) // Todo : 채워넣어야함
+//                .chattingNum(0) // Todo : 채워넣어야함
+//                .address(null) // Todo : 채워넣어야함
                 .build();
     }
 }
