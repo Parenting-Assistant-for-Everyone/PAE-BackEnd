@@ -45,12 +45,12 @@ public class GoodsBoardServiceImpl implements GoodsBoardSerivce {
         );
 
         if (images != null && !images.isEmpty()) {
-            images.forEach(image -> {
+            int imageOrder = 1;
+            for (MultipartFile image : images) {
                 PhotoData photoData = s3Util.uploadFile(image);
-
-                // Todo : 추후 벌크연산을 통해 쿼리 최소화
-                imageRepository.save(imageRepository.save(Image.of(photoData, savedGoodsBoard)));
-            });
+                imageRepository.save(Image.of(photoData, savedGoodsBoard, imageOrder));
+                imageOrder++;
+            }
         }
 
         return GoodsBoardConverter.EntityToRegistAndModifyRespDto(savedGoodsBoard);
@@ -85,7 +85,7 @@ public class GoodsBoardServiceImpl implements GoodsBoardSerivce {
                 PhotoData photoData = s3Util.uploadFile(image);
 
                 // Todo : 추후 벌크연산을 통해 쿼리 최소화
-                imageRepository.save(imageRepository.save(Image.of(photoData, goodsBoard)));
+//                imageRepository.save(imageRepository.save(Image.of(photoData, goodsBoard)));
             });
         }
 

@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.pae.server.board.domain.QGoodsBoard.*;
+import static com.pae.server.image.domain.QImage.*;
 import static com.pae.server.like.domain.QLike.*;
 
 @Repository
@@ -43,16 +44,19 @@ public class GoodsBoardCustomRepositoryImpl implements GoodsBoardCustomRepositor
         List<Tuple> fetch = jpaQueryFactory
                 .select(
                         goodsBoard,
-                        like.countDistinct().as(likeCount)
+                        like.countDistinct().as(likeCount),
+                        image.photoData.photoUrl
                         // Todo : 채팅방 개수도 select 해와야함.
                 )
                 .from(goodsBoard)
                 .leftJoin(goodsBoard.likes, like)
+                .leftJoin(goodsBoard.images, image)
+                .on(image.imageOrder.eq(1))
                 .where(
                         goodsBoard.saleStatus.in(SaleStatus.ON_SALE, SaleStatus.RESERVATION),
                         categoryEq(goodsQueryCond.category())
                 )
-                .groupBy(goodsBoard)
+                .groupBy(goodsBoard, image)
                 .fetch();
 
         List<GoodsBoardSimpleInfoDto> result = generateGoodsSimpleInfoDtoList(fetch, likeCount);
@@ -75,13 +79,16 @@ public class GoodsBoardCustomRepositoryImpl implements GoodsBoardCustomRepositor
         List<Tuple> fetch = jpaQueryFactory
                 .select(
                         goodsBoard,
-                        like.countDistinct().as(likeCount)
+                        like.countDistinct().as(likeCount),
+                        image.photoData.photoUrl
                         // Todo : 채팅방 개수도 select 해와야함.
                 )
                 .from(like)
                 .leftJoin(like.board.as(QGoodsBoard.class), goodsBoard)
+                .leftJoin(goodsBoard.images, image)
+                .on(image.imageOrder.eq(1))
                 .where(like.member.id.eq(queryMemberId))
-                .groupBy(goodsBoard)
+                .groupBy(goodsBoard, image)
                 .fetch();
 
         List<GoodsBoardSimpleInfoDto> result = generateGoodsSimpleInfoDtoList(fetch, likeCount);
@@ -102,13 +109,16 @@ public class GoodsBoardCustomRepositoryImpl implements GoodsBoardCustomRepositor
         List<Tuple> fetch = jpaQueryFactory
                 .select(
                         goodsBoard,
-                        like.countDistinct().as(likeCount)
+                        like.countDistinct().as(likeCount),
+                        image.photoData.photoUrl
                         // Todo : 채팅방 개수도 select 해와야함.
                 )
                 .from(goodsBoard)
                 .leftJoin(goodsBoard.likes, like)
+                .leftJoin(goodsBoard.images, image)
+                .on(image.imageOrder.eq(1))
                 .where(goodsBoard.member.id.eq(queryMemberId))
-                .groupBy(goodsBoard)
+                .groupBy(goodsBoard, image)
                 .fetch();
 
         List<GoodsBoardSimpleInfoDto> result = generateGoodsSimpleInfoDtoList(fetch, likeCount);
@@ -127,8 +137,9 @@ public class GoodsBoardCustomRepositoryImpl implements GoodsBoardCustomRepositor
         for (Tuple tuple : boardInfos) {
             GoodsBoard goods = tuple.get(goodsBoard);
             Long likeNum = tuple.get(likeCount);
+            String thumbnailUrl = tuple.get(image.photoData.photoUrl);
 
-            simpleInfoDtos.add(GoodsBoardSimpleInfoDto.of(goods, Math.toIntExact(likeNum)));
+            simpleInfoDtos.add(GoodsBoardSimpleInfoDto.of(goods, Math.toIntExact(likeNum), thumbnailUrl));
         }
 
         return simpleInfoDtos;
