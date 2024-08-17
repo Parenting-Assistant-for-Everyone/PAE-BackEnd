@@ -44,6 +44,10 @@ public class GoodsBoardController {
             @RequestPart GoodsBoardModifyReqDto modifyReqDto,
             @RequestPart(required = false) List<MultipartFile> newImages
     ) {
+        log.info("dto : {} ", modifyReqDto);
+        for (Long l : modifyReqDto.deleteImageIdList()) {
+            log.info("data : {}", l);
+        }
         GoodsBoardRegistAndModifyRespDto response = goodsBoardSerivce.goodsBoardModify(goodsId, modifyReqDto, newImages);
         return ResponseEntity.ok().body(ApiResponse.createSuccess(response, CustomResponseStatus.SUCCESS));
     }

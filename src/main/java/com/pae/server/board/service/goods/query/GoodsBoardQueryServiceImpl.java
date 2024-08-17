@@ -7,6 +7,7 @@ import com.pae.server.board.dto.response.GoodsBoardSimpleInfoDto;
 import com.pae.server.board.repository.goods.GoodsBoardRepository;
 import com.pae.server.common.enums.CustomResponseStatus;
 import com.pae.server.common.exception.CustomException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class GoodsBoardQueryServiceImpl implements GoodsBoardQueryService {
     private final GoodsBoardRepository goodsBoardRepository;
 
@@ -22,8 +24,7 @@ public class GoodsBoardQueryServiceImpl implements GoodsBoardQueryService {
             Pageable pageable,
             GoodsQueryCond goodsQueryCond
     ) {
-        Page<GoodsBoardSimpleInfoDto> goodsBoardSimpleInfoDtos = goodsBoardRepository.queryGoods(pageable, goodsQueryCond);
-        return goodsBoardSimpleInfoDtos;
+        return goodsBoardRepository.queryGoods(pageable, goodsQueryCond);
     }
 
     @Override
@@ -33,7 +34,7 @@ public class GoodsBoardQueryServiceImpl implements GoodsBoardQueryService {
         GoodsBoard goodsBoard = goodsBoardRepository.findById(goodsBoardId).orElseThrow(
                 () -> new CustomException(CustomResponseStatus.BOARD_NOT_FOUND)
         );
-
+        goodsBoard.incrementViewCount();
         return GoodsBoardDetailRespDto.from(goodsBoard);
     }
 

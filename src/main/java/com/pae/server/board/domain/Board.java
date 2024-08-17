@@ -10,8 +10,6 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,9 +74,9 @@ public abstract class Board extends BaseEntity {
         this.viewCount+=1;
     }
 
-    public Set<String> getAllImageNames() {
+    public Set<String> getAllImageUrls() {
         return images.stream()
-                .map(image -> image.getPhotoData().getOriginalName())
+                .map(image -> image.getPhotoData().getPhotoUrl())
                 .collect(Collectors.toSet());
     }
 

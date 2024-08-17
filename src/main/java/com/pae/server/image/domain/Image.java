@@ -16,6 +16,8 @@ public class Image extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private int imageOrder;
+
     @Embedded
     private PhotoData photoData;
 
@@ -24,14 +26,16 @@ public class Image extends BaseEntity {
     private Board board;
 
     @Builder
-    private Image(PhotoData photoData, Board board) {
+    private Image(PhotoData photoData, Board board, int imageOrder) {
         this.photoData = photoData;
         this.board = board;
+        this.imageOrder = imageOrder;
     }
 
-    public static Image of(PhotoData photoData, Board board) {
+    public static Image of(PhotoData photoData, Board board, int imageOrder) {
         return Image.builder()
                 .photoData(photoData)
+                .imageOrder(imageOrder)
                 .board(board)
                 .build();
     }
@@ -42,5 +46,9 @@ public class Image extends BaseEntity {
 
     public String getKey() {
         return photoData.getObject();
+    }
+
+    public void updateImageOrder(int newImageOrder) {
+        this.imageOrder = newImageOrder;
     }
 }

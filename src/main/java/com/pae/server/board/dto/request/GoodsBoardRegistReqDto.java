@@ -12,7 +12,7 @@ public record GoodsBoardRegistReqDto(
         String title,
         GoodsCategory goodsCategory,
         SaleType saleType,
-        long price,
+        Long price,
         String description
 ) {
 }
