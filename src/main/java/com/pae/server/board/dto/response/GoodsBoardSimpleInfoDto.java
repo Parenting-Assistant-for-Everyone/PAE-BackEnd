@@ -25,7 +25,7 @@ public record GoodsBoardSimpleInfoDto(
                 .price(goodsBoard.getPriceBySaleType())
                 .saleStatus(goodsBoard.getSaleStatus().toString())
                 .likeNum(likeNum)
-                .thumbnailUrl(thumbnailUrl) // Todo : 채워넣어야함
+                .thumbnailUrl(thumbnailUrl)
 //                .chattingNum(0) // Todo : 채워넣어야함
 //                .address(null) // Todo : 채워넣어야함
                 .build();

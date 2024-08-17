@@ -58,6 +58,7 @@ public class GoodsBoardCustomRepositoryImpl implements GoodsBoardCustomRepositor
                 )
                 .groupBy(goodsBoard, image)
                 .fetch();
+        log.info("size : {}", fetch.size());
 
         List<GoodsBoardSimpleInfoDto> result = generateGoodsSimpleInfoDtoList(fetch, likeCount);
 

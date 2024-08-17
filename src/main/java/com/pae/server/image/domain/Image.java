@@ -47,4 +47,8 @@ public class Image extends BaseEntity {
     public String getKey() {
         return photoData.getObject();
     }
+
+    public void updateImageOrder(int newImageOrder) {
+        this.imageOrder = newImageOrder;
+    }
 }
