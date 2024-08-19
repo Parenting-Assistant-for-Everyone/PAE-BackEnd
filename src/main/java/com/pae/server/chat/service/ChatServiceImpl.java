@@ -72,13 +72,16 @@ public class ChatServiceImpl implements ChatService {
                     .orElseThrow(() -> new CustomException(CustomResponseStatus.LAST_CHAT_NOT_FOUND));
 
             LocalDateTime createdAt = lastChatMessage.getCreatedAt();
+            long unreadMessageCount = chatMessageRepository.countByChatRoomIdAndSenderIdNotAndIsReadFalse(chatRoom.getId(), memberId);
             result.add(
                     ChatRoomRespDto.of(
+                            chatRoom.getId(),
                             otherMember.getNickname(),
                             otherMember.getPhotoData().getPhotoUrl(),
                             lastChatMessage.getMessageContent(),
                             LocalDate.of(createdAt.getYear(), createdAt.getMonth(), createdAt.getDayOfMonth()),
-                            goodsBoardThumbnailUrl
+                            goodsBoardThumbnailUrl,
+                            unreadMessageCount
                     )
             );
         }
