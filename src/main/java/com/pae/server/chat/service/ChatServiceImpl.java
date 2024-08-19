@@ -4,6 +4,7 @@ import com.pae.server.board.repository.goods.GoodsBoardRepository;
 import com.pae.server.chat.domain.ChatMessage;
 import com.pae.server.chat.domain.ChatRoom;
 import com.pae.server.chat.dto.request.ChatSendReqDto;
+import com.pae.server.chat.dto.response.ChatMessageRespDto;
 import com.pae.server.chat.dto.response.ChatRoomRespDto;
 import com.pae.server.chat.dto.response.ChatSendRespDto;
 import com.pae.server.chat.repository.mongo.ChatMessageRepository;
@@ -82,6 +83,13 @@ public class ChatServiceImpl implements ChatService {
             );
         }
         return result;
+    }
+
+    @Override
+    public List<ChatMessageRespDto> queryChatMessages(Long chatRoomId) {
+        List<ChatMessage> chatMessages = chatMessageRepository.findAllByChatRoomIdOrderByCreatedAtAsc(chatRoomId);
+
+        return chatMessages.stream().map(ChatMessageRespDto::from).toList();
     }
 
     private ChatMessage saveChatMessage(ChatSendReqDto chatSendReqDto, Long trustChatRoomId) {
