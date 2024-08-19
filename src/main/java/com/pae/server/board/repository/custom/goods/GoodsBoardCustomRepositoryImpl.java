@@ -133,6 +133,15 @@ public class GoodsBoardCustomRepositoryImpl implements GoodsBoardCustomRepositor
         return PageableExecutionUtils.getPage(result, pageable, countQuery::fetchOne);
     }
 
+    @Override
+    public String getGoodsBoardThumbnail(Long goodsBoardId) {
+        return jpaQueryFactory
+                .select(image.photoData.photoUrl)
+                .from(image)
+                .where(image.board.id.eq(goodsBoardId).and(image.imageOrder.eq(1)))
+                .fetchOne();
+    }
+
     private List<GoodsBoardSimpleInfoDto> generateGoodsSimpleInfoDtoList(List<Tuple> boardInfos, NumberPath<Long> likeCount) {
         List<GoodsBoardSimpleInfoDto> simpleInfoDtos = new ArrayList<>();
         for (Tuple tuple : boardInfos) {
