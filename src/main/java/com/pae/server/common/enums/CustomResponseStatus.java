@@ -26,7 +26,8 @@ public enum CustomResponseStatus {
     MATCHING_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR.value(), "6041","매칭 정보가 존재하지 않습니다."),
 
     GOODS_CHAT_NOT_FOUND(HttpStatus.NOT_FOUND.value(),"6042","채팅방이 존재하지 않습니다."),
-    LAST_CHAT_NOT_FOUND(HttpStatus.NOT_FOUND.value(),"6043","마지막 채팅이 존재하지 않습니다.");
+    LAST_CHAT_NOT_FOUND(HttpStatus.NOT_FOUND.value(),"6043","마지막 채팅이 존재하지 않습니다."),
+    EXIST_CHAT_ROOM(HttpStatus.CONFLICT.value(),"6044","이미 존재하는 채팅 입니다.");
 
 
     private final int httpStatusCode;

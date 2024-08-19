@@ -3,8 +3,10 @@ package com.pae.server.chat.service;
 import com.pae.server.board.repository.goods.GoodsBoardRepository;
 import com.pae.server.chat.domain.ChatMessage;
 import com.pae.server.chat.domain.ChatRoom;
+import com.pae.server.chat.dto.request.ChatRoomCreateReqDto;
 import com.pae.server.chat.dto.request.ChatSendReqDto;
 import com.pae.server.chat.dto.response.ChatMessageRespDto;
+import com.pae.server.chat.dto.response.ChatRoomCreateRespDto;
 import com.pae.server.chat.dto.response.ChatRoomRespDto;
 import com.pae.server.chat.dto.response.ChatSendRespDto;
 import com.pae.server.chat.repository.mongo.ChatMessageRepository;
@@ -13,6 +15,7 @@ import com.pae.server.common.enums.CustomResponseStatus;
 import com.pae.server.common.exception.CustomException;
 import com.pae.server.member.domain.Member;
 import com.pae.server.member.repository.MemberRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,7 @@ import java.util.Objects;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class ChatServiceImpl implements ChatService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
@@ -33,19 +37,21 @@ public class ChatServiceImpl implements ChatService {
     private final GoodsBoardRepository goodsBoardRepository;
 
     @Override
-    public ChatSendRespDto processMessage(ChatSendReqDto chatSendReqDto) {
-        // 1. 채팅방이 존재하는지 확인
-        ChatRoom chatRoom;
-        if (chatSendReqDto.chatRoomId() == null) {
-            // 첫 채팅이 시작된 채팅방 -> 채팅방을 생성해줘야함.
-            chatRoom = createChatRoom(chatSendReqDto);
-        } else {
-            // 채팅방이 존재하는 경우
-            chatRoom = validGoodsChatRoom(chatSendReqDto.initiatorId(), chatSendReqDto.recipientId(), chatSendReqDto.goodsBoardId());
-        }
+    public ChatRoomCreateRespDto createChatRoom(ChatRoomCreateReqDto chatRoomCreateReqDto) {
+        validGoodsChatRoom(chatRoomCreateReqDto.initiatorId(), chatRoomCreateReqDto.recipientId(), chatRoomCreateReqDto.goodsBoardId());
 
-        // 2. 메시지 저장
-        return ChatSendRespDto.from(saveChatMessage(chatSendReqDto, chatRoom.getId()));
+        ChatRoom savedChatRoom = chatRoomRepository.save(ChatRoom.from(chatRoomCreateReqDto));
+        return ChatRoomCreateRespDto.from(savedChatRoom.getId());
+    }
+
+    @Override
+    public ChatSendRespDto sendMessage(ChatSendReqDto chatSendReqDto, Long chatRoomId) {
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow(
+                () -> new CustomException(CustomResponseStatus.GOODS_CHAT_NOT_FOUND)
+        );
+        if (Boolean.FALSE.equals(chatRoom.getIsActivate())) chatRoom.activateChatRoom();
+
+        return ChatSendRespDto.from(saveChatMessage(chatSendReqDto, chatRoomId));
     }
 
     @Override
@@ -57,7 +63,7 @@ public class ChatServiceImpl implements ChatService {
         Long trustMemberId = member.getId();
 
         // 속해있는 채팅방 싹다 가져오기
-        List<ChatRoom> allChatRoom = chatRoomRepository.findAllByInitiatorIdOrRecipientId(trustMemberId, trustMemberId);
+        List<ChatRoom> allChatRoom = chatRoomRepository.findAllByIsActivateTrueAndInitiatorIdOrRecipientId(trustMemberId, trustMemberId);
 
         List<ChatRoomRespDto> result = new ArrayList<>(allChatRoom.size());
         for (ChatRoom chatRoom : allChatRoom) {
@@ -99,14 +105,12 @@ public class ChatServiceImpl implements ChatService {
         return chatMessageRepository.save(ChatMessage.of(chatSendReqDto, trustChatRoomId));
     }
 
-    private ChatRoom validGoodsChatRoom(Long initiatorId, Long recipientId, Long goodsBoardId) {
-        return chatRoomRepository.findByInitiatorIdAndRecipientIdAndGoodsBoardId(
+    private void validGoodsChatRoom(Long initiatorId, Long recipientId, Long goodsBoardId) {
+        chatRoomRepository.findByInitiatorIdAndRecipientIdAndGoodsBoardId(
                 initiatorId, recipientId, goodsBoardId
-        ).orElseThrow(() -> new CustomException(CustomResponseStatus.GOODS_CHAT_NOT_FOUND));
-    }
-
-    private ChatRoom createChatRoom(ChatSendReqDto chatSendReqDto) {
-        return chatRoomRepository.save(ChatRoom.from(chatSendReqDto));
+        ).ifPresent(chatRoom -> {
+            throw new CustomException(CustomResponseStatus.EXIST_CHAT_ROOM);
+        });
     }
 
 }

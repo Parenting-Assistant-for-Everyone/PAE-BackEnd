@@ -39,7 +39,7 @@ public class ChatMessage extends BaseEntity {
     public static ChatMessage of(ChatSendReqDto chatSendReqDto, Long trustChatRoomId) {
         return ChatMessage.builder()
                 .chatRoomId(trustChatRoomId)
-                .senderId(chatSendReqDto.initiatorId())
+                .senderId(chatSendReqDto.senderId())
                 .messageContent(chatSendReqDto.message())
                 .messageType(chatSendReqDto.messageType())
                 .build();

@@ -9,15 +9,13 @@ import java.time.LocalDateTime;
 public record ChatSendRespDto(
         String messageContent,
         LocalDateTime sendAt,
-        Long senderId,
-        Long chatRoomId
+        Long senderId
 ) {
     public static ChatSendRespDto from(ChatMessage chatMessage) {
         return ChatSendRespDto.builder()
                 .messageContent(chatMessage.getMessageContent())
                 .sendAt(chatMessage.getCreatedAt())
                 .senderId(chatMessage.getSenderId())
-                .chatRoomId(chatMessage.getChatRoomId())
                 .build();
     }
 }
