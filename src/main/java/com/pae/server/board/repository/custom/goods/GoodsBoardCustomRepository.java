@@ -35,4 +35,6 @@ public interface GoodsBoardCustomRepository {
      * 거래 게시글의 썸네일 조회
      */
     String getGoodsBoardThumbnail(Long goodsBoardId);
+
+
 }

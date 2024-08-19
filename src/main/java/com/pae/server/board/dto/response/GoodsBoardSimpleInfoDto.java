@@ -14,10 +14,10 @@ public record GoodsBoardSimpleInfoDto(
         int likeNum,
         String saleStatus,
         String thumbnailUrl,
-        int chattingNum,
+        long chattingNum,
         String address
 ) {
-    public static GoodsBoardSimpleInfoDto of(GoodsBoard goodsBoard, Integer likeNum, String thumbnailUrl) {
+    public static GoodsBoardSimpleInfoDto of(GoodsBoard goodsBoard, Integer likeNum, String thumbnailUrl, long chattingNum) {
         return GoodsBoardSimpleInfoDto.builder()
                 .boardId(goodsBoard.getId())
                 .title(goodsBoard.getTitle())
@@ -26,7 +26,7 @@ public record GoodsBoardSimpleInfoDto(
                 .saleStatus(goodsBoard.getSaleStatus().toString())
                 .likeNum(likeNum)
                 .thumbnailUrl(thumbnailUrl)
-//                .chattingNum(0) // Todo : 채워넣어야함
+                .chattingNum(chattingNum)
 //                .address(null) // Todo : 채워넣어야함
                 .build();
     }

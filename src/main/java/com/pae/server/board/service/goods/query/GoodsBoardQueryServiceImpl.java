@@ -5,6 +5,7 @@ import com.pae.server.board.dto.request.GoodsQueryCond;
 import com.pae.server.board.dto.response.GoodsBoardDetailRespDto;
 import com.pae.server.board.dto.response.GoodsBoardSimpleInfoDto;
 import com.pae.server.board.repository.goods.GoodsBoardRepository;
+import com.pae.server.chat.repository.ChatRoomRepository;
 import com.pae.server.common.enums.CustomResponseStatus;
 import com.pae.server.common.exception.CustomException;
 import jakarta.transaction.Transactional;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class GoodsBoardQueryServiceImpl implements GoodsBoardQueryService {
     private final GoodsBoardRepository goodsBoardRepository;
+    private final ChatRoomRepository chatRoomRepository;
 
     @Override
     public Page<GoodsBoardSimpleInfoDto> queryGoods(
@@ -35,7 +37,9 @@ public class GoodsBoardQueryServiceImpl implements GoodsBoardQueryService {
                 () -> new CustomException(CustomResponseStatus.BOARD_NOT_FOUND)
         );
         goodsBoard.incrementViewCount();
-        return GoodsBoardDetailRespDto.from(goodsBoard);
+        long chatRoomCount = chatRoomRepository.getChatRoomCountByGoodsBoard(goodsBoard.getId());
+
+        return GoodsBoardDetailRespDto.from(goodsBoard, chatRoomCount);
     }
 
     @Override

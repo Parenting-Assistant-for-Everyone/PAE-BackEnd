@@ -2,7 +2,6 @@ package com.pae.server.chat.domain;
 
 import com.pae.server.chat.domain.enums.ChatType;
 import com.pae.server.chat.dto.request.ChatRoomCreateReqDto;
-import com.pae.server.chat.dto.request.ChatSendReqDto;
 import com.pae.server.common.domain.BaseEntity;
 import com.pae.server.common.enums.BaseStatus;
 import jakarta.persistence.*;
