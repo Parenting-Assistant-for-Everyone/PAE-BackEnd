@@ -28,7 +28,7 @@ public class GoodsBoardController {
     private final GoodsBoardSerivce goodsBoardSerivce;
     private final GoodsBoardQueryService goodsBoardQueryService;
 
-    @PostMapping("/goods")
+    @PostMapping("goods")
     public ResponseEntity<ApiResponse<GoodsBoardRegistAndModifyRespDto>> goodsBoardRegist(
             @RequestPart GoodsBoardRegistReqDto registDto,
             @RequestPart(required = false) List<MultipartFile> images

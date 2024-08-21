@@ -24,10 +24,10 @@ public record GoodsBoardDetailRespDto(
 
         List<ImageData> goodsImgData,
 
-        int chatCount,
+        long chatCount,
         int likeCount
 ) {
-    public static GoodsBoardDetailRespDto from(GoodsBoard goods) {
+    public static GoodsBoardDetailRespDto from(GoodsBoard goods, long chatCount) {
         return GoodsBoardDetailRespDto.builder()
                 .boardId(goods.getId())
                 .nickname(goods.getMember().getNickname())
@@ -40,7 +40,7 @@ public record GoodsBoardDetailRespDto(
                 .createdAt(goods.getCreatedAt())
                 .viewCount(goods.getViewCount())
                 .goodsImgData(ImageData.from(goods.getImages()))
-//                .chatCount(goods.getChatCount())
+                .chatCount(chatCount)
                 .likeCount(goods.getLikes().size())
                 .build();
     }
