@@ -4,6 +4,8 @@ import com.pae.server.assistant.domain.enums.AssistantStatus;
 import com.pae.server.assistant.domain.enums.AssistantType;
 import com.pae.server.assistant.domain.enums.CertificationStatus;
 import com.pae.server.assistant.domain.enums.PreferredActivity;
+import com.pae.server.board.domain.Board;
+import com.pae.server.board.domain.MatchingBoard;
 import com.pae.server.common.domain.BaseEntity;
 import com.pae.server.image.domain.ImageData;
 import com.pae.server.member.domain.enums.Gender;
@@ -56,6 +58,8 @@ public class Assistant extends BaseEntity {
     private List<MatchHistory> matchHistoryList = new ArrayList<>();
     @OneToMany(mappedBy = "assistant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Career> careerList = new ArrayList<>();
+    @OneToMany(mappedBy = "assistant", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MatchingBoard> matchingBoardList = new ArrayList<>();
 
     public void addCareer(Career career) {
         careerList.add(career);

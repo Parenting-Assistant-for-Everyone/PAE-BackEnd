@@ -26,9 +26,13 @@ public class LikeController {
         return ApiResponse.createSuccess(LikeConverter.createLikeResDto(like), CustomResponseStatus.SUCCESS);
     }
     //게시판 좋아요(찜) 취소하기
-    @DeleteMapping("/delete/{likeId}")
-    public ApiResponse<CreateLikeResDto> deleteLike(@PathVariable Long likeId){
-        Like like = likeService.deleteLike(likeId);
+    @DeleteMapping("/delete/{memberId}/{boardId}")
+    public ApiResponse<CreateLikeResDto> deleteLike(@PathVariable Long memberId, @PathVariable Long boardId){
+        Like like = likeService.deleteLike(memberId, boardId);
         return ApiResponse.createSuccess(LikeConverter.createLikeResDto(like), CustomResponseStatus.SUCCESS);
+    }
+    @GetMapping("/checkLike")
+    public ApiResponse<Boolean> checkLike(@RequestParam("id")Long boardId, @RequestParam("memberId")Long memberId){
+        return ApiResponse.createSuccess(likeService.checkLike(boardId, memberId),CustomResponseStatus.SUCCESS);
     }
 }

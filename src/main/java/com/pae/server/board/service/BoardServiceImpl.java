@@ -33,7 +33,14 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     public MatchingBoard createMatchingBoard(CreateMatchingBoardDto dto) {
         MatchingBoard matchingBoard = BoardConverter.createMatchingBoard(dto);
-        matchingBoard.setMember(memberRepository.getById(dto.memberId()));
+        if(dto.boardType()==BoardType.SEARCH){
+            matchingBoard.setMember(memberRepository.getById(dto.memberId()));
+
+        }
+        else{
+            matchingBoard.setAssistant(assistantRepository.getById(dto.memberId()));
+
+        }
         return boardRepository.save(matchingBoard);
     }
 
@@ -73,7 +80,11 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public MatchingBoard getMatchingBoard(Long boardId) {
-        return matchingBoardRepository.findById(boardId).get();
+
+        MatchingBoard matchingBoard = matchingBoardRepository.findById(boardId).get();
+        matchingBoard.incrementViewCount();
+        matchingBoardRepository.save(matchingBoard);
+        return matchingBoard;
     }
 
     //육아도우미 게시판 검색 기능

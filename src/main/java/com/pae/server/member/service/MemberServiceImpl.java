@@ -5,6 +5,9 @@ import com.pae.server.assistant.domain.Assistant;
 import com.pae.server.assistant.domain.MatchHistory;
 import com.pae.server.assistant.domain.enums.MatchingStatus;
 import com.pae.server.assistant.repository.AssistantRepository;
+import com.pae.server.board.domain.MatchingBoard;
+import com.pae.server.board.domain.enums.BoardType;
+import com.pae.server.board.repository.MatchingBoardRepository;
 import com.pae.server.common.enums.CustomResponseStatus;
 import com.pae.server.common.exception.CustomException;
 import com.pae.server.member.converter.MemberConverter;
@@ -35,6 +38,7 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final AssistantRepository assistantRepository;
     private final MatchRepository matchRepository;
+    private final MatchingBoardRepository matchingBoardRepository;
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper;
 
@@ -164,18 +168,23 @@ public class MemberServiceImpl implements MemberService {
         System.out.println(address);
 
         if(type == 1){
-            List<Assistant> assistantList = assistantRepository.findAll().stream().filter(assistant -> address.equals(assistant.getAddress()))
+            List<MatchingBoard> matchingBoardList = matchingBoardRepository.findAll().stream()
+                    .filter(matchingBoard -> matchingBoard.getBoardType() == BoardType.SEARCH)
+                    .filter(matchingBoard -> matchingBoard.getAssistant() != null && address.equals(matchingBoard.getAssistant().getAddress()))
                     .collect(Collectors.toList());
-            for(Assistant assistant : assistantList){
-                LocationAuthResDto locationResult = MemberConverter.getLocationResult(assistant.getLatitude(), assistant.getLongitude(), assistant.getId());
+
+            for(MatchingBoard matchingBoard : matchingBoardList){
+                LocationAuthResDto locationResult = MemberConverter.getLocationResult(matchingBoard.getAssistant().getLatitude(), matchingBoard.getAssistant().getLongitude(), matchingBoard.getAssistant().getId());
                 locationResults.add(locationResult);
             }
         }
         else{
-            List<Member> memberList = memberRepository.findAll().stream().filter(member -> address.equals(member.getAddress()))
+            List<MatchingBoard> matchingBoardList = matchingBoardRepository.findAll().stream()
+                    .filter(matchingBoard -> matchingBoard.getBoardType() == BoardType.OFFER)
+                    .filter(matchingBoard -> matchingBoard.getMember() != null && address.equals(matchingBoard.getMember().getAddress()))
                     .collect(Collectors.toList());
-            for (Member member: memberList) {
-                LocationAuthResDto locationResult = MemberConverter.getLocationResult(member.getLatitude(), member.getLongitude(), member.getId());
+            for(MatchingBoard matchingBoard : matchingBoardList){
+                LocationAuthResDto locationResult = MemberConverter.getLocationResult(matchingBoard.getMember().getLatitude(), matchingBoard.getMember().getLongitude(), matchingBoard.getMember().getId());
                 locationResults.add(locationResult);
             }
         }

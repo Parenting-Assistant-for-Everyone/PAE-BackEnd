@@ -42,13 +42,14 @@ public class LikeServiceImpl implements LikeService {
         return like;
     }
 
+
     @Override
-    public Like deleteLike(Long likeId) {
-        if(!likeRepository.existsById(likeId)){
+    public Like deleteLike(Long memberId, Long boardId) {
+        if(!likeRepository.existsByBoardIdAndMemberId(boardId, memberId)){
             throw new CustomException(CustomResponseStatus.LIKE_NOT_FOUND);
         }
         else{
-            Like like = likeRepository.findById(likeId).get();
+            Like like = likeRepository.findByBoardIdAndMemberId(boardId, memberId).get();
             likeRepository.delete(like);
             return like;
         }
@@ -57,5 +58,10 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public List<MatchingBoardListDto> getLikeBoard() {
         return null;
+    }
+
+    @Override
+    public boolean checkLike(Long id, Long memberId) {
+        return likeRepository.existsByBoardIdAndMemberId(id, memberId);
     }
 }

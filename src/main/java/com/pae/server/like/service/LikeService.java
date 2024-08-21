@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface LikeService {
     Like createLike(CreateLikeReqDto dto); //게시글 좋아요(찜 기능)
-    Like deleteLike(Long likeId); //게시글 좋아요 취소(찜 기능 해제)
+    Like deleteLike(Long likeId, Long boardId); //게시글 좋아요 취소(찜 기능 해제)
     List<MatchingBoardListDto> getLikeBoard(); //좋아요(찜)한 게시판 리스트 보기
+    boolean checkLike(Long id, Long memberId);
 }

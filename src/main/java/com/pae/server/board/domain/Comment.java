@@ -1,6 +1,7 @@
 package com.pae.server.board.domain;
 
 import com.pae.server.common.domain.BaseEntity;
+import com.pae.server.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,12 +19,21 @@ public class Comment extends BaseEntity {
     @Column(length = 30)
     private String path;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private Board board;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
     public void setBoard(Board board){
         this.board = board;
         board.getComments().add(this);
+    }
+    public void setMember(Member member){
+        this.member = member;
+        member.getComments().add(this);
     }
     public void deleteBoardFromComment() {
         if (board != null) {

@@ -1,7 +1,9 @@
 package com.pae.server.board.converter;
 
 import com.pae.server.board.domain.MatchingBoard;
+import com.pae.server.board.domain.enums.BoardType;
 import com.pae.server.board.dto.request.CreateMatchingBoardDto;
+import com.pae.server.board.dto.response.CommentResDtoList;
 import com.pae.server.board.dto.response.CreateMatchingBoardResDto;
 import com.pae.server.board.dto.response.MatchingBoardListDto;
 import com.pae.server.board.dto.response.UpdateMatchingBoardResDto;
@@ -39,6 +41,7 @@ public class BoardConverter {
     public static UpdateMatchingBoardResDto updateMatchingBoardResDto(MatchingBoard matchingBoard){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String formattedDate = matchingBoard.getModifiedAt().format(formatter);
+        CommentResDtoList comments = CommentConverter.viewComments(matchingBoard.getComments());
         return UpdateMatchingBoardResDto.builder()
                 .title(matchingBoard.getTitle())
                 .content(matchingBoard.getContent())
@@ -47,9 +50,13 @@ public class BoardConverter {
                 .viewCount(matchingBoard.getViewCount())
                 .id(matchingBoard.getId())
                 .updatedAt(formattedDate)
+                .comment(comments)
                 .comments(matchingBoard.getComments().size())
                 .likes(matchingBoard.getLikes().size())
-                .writer(matchingBoard.getMember().getNickname())
+                .writer(matchingBoard.getBoardType()== BoardType.OFFER ? matchingBoard.getMember().getNickname(): matchingBoard.getAssistant().getName())
+                .address(matchingBoard.getBoardType()== BoardType.OFFER ? matchingBoard.getMember().getAddress() : matchingBoard.getAssistant().getAddress())
+                .latitude(matchingBoard.getBoardType()== BoardType.OFFER ? matchingBoard.getMember().getLatitude() : matchingBoard.getAssistant().getLatitude())
+                .longitude(matchingBoard.getBoardType()== BoardType.OFFER ? matchingBoard.getMember().getLongitude() : matchingBoard.getAssistant().getLongitude())
                 .build();
     }
     public static MatchingBoardListDto getMatchingBoardList(Page<MatchingBoard> list){

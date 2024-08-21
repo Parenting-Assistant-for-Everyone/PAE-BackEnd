@@ -2,6 +2,7 @@ package com.pae.server.member.domain;
 
 import com.pae.server.assistant.domain.MatchHistory;
 import com.pae.server.board.domain.Board;
+import com.pae.server.board.domain.Comment;
 import com.pae.server.common.domain.BaseEntity;
 import com.pae.server.common.enums.BaseStatus;
 import com.pae.server.image.domain.ImageData;
@@ -70,26 +71,25 @@ public class Member extends BaseEntity {
     private double longitude; // 경도
     @Column(length = 30)
     private String address;
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<MemberRole> roles = new ArrayList<>();
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+    private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<Board> boards = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<Like> likes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<ChildInformation> informationList = new ArrayList<>();
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private  List<MatchHistory> matchHistoryList = new ArrayList<>();
     public void setAddress(String address,double latitude, double longitude){
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
     }
-
-
-
 }
 
