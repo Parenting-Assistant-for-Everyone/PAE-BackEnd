@@ -45,4 +45,8 @@ public class ChatMessage extends BaseEntity {
                 .isRead(isRead)
                 .build();
     }
+
+    public void updateUnReadToRead() {
+        this.isRead = true;
+    }
 }

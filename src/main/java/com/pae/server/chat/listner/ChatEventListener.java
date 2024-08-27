@@ -1,5 +1,9 @@
 package com.pae.server.chat.listner;
 
+import com.pae.server.chat.repository.mongo.ChatMessageRepository;
+import com.pae.server.chat.service.ChatService;
+import com.pae.server.chat.service.event.ChatEventService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.MessageHeaders;
@@ -14,7 +18,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class ChatEventListener {
+    private final ChatEventService chatEventService;
+
     // 현재 접속 중인 유저 정보 저장 (sessionId를 키로 사용)
     private final Map<String, Long> sessionIdToUserMap = new ConcurrentHashMap<>(); // userId로 수정
     private final Map<Long, Set<Long>> roomIdToUsersMap = new ConcurrentHashMap<>(); // userId로 수정
@@ -32,15 +39,19 @@ public class ChatEventListener {
         StompHeaderAccessor connectAccessor = StompHeaderAccessor.wrap((org.springframework.messaging.Message<?>) headers.get("simpConnectMessage"));
 
         String userIdString = connectAccessor.getFirstNativeHeader("userId"); // userId 가져오기
-        String roomId = connectAccessor.getFirstNativeHeader("roomId");
+        String roomIdString = connectAccessor.getFirstNativeHeader("roomId");
 
-        if (userIdString != null && roomId != null) {
+        if (userIdString != null && roomIdString != null) {
             Long userId = Long.parseLong(userIdString); // Long 타입으로 변환
+            Long roomId = Long.parseLong(roomIdString); // Long 타입으로 변환
             log.info("입장한 유저 ID : {}", userId);
             log.info("입장한 방 id : {}", roomId);
 
             sessionIdToUserMap.put(sessionId, userId);
-            roomIdToUsersMap.computeIfAbsent(Long.parseLong(roomId), k -> ConcurrentHashMap.newKeySet()).add(userId);
+            roomIdToUsersMap.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet()).add(userId);
+
+            // 채팅방에 입장할때 읽지않은 메시지를 읽음 처리
+            chatEventService.markMessagesAsRead(roomId, userId);
         } else {
             log.warn("userId 또는 roomId가 누락되었습니다.");
         }
