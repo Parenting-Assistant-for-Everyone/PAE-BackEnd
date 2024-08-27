@@ -65,7 +65,7 @@ public class ChatController {
     }
 
     /**
-     * 채팅 목록 조회
+     * 채팅 목록 조회 -> // Todo : 채팅방 입장과 같음 따라서 안읽은 메시지가 있다면 입장시 읽음 처리 해줘야함.
      */
     @GetMapping("/api/v1/member/chat/{chatRoomId}")
     public ResponseEntity<ApiResponse<List<ChatMessageRespDto>>> queryChatMessages(

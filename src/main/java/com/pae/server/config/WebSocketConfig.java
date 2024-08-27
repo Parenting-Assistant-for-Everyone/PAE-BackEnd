@@ -14,11 +14,15 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // stomp 접속 주소 url = ws://localhost:8080/ws, 프로토콜이 http가 아니다!
         // ws://localhost/ws 를 호출하면 websocket이 연결된다.
+//        registry.addEndpoint("/connection/ws")
+//                .setAllowedOrigins("*")
+//                .withSockJS();
+//        registry.addEndpoint("/connection/ws")
+//                .setAllowedOrigins("*");
         registry.addEndpoint("/connection/ws")
-                .setAllowedOrigins("*")
+                .setAllowedOrigins("http://localhost:3000")  // 클라이언트가 실행되는 포트로 제한
                 .withSockJS();
-        registry.addEndpoint("/connection/ws")
-                .setAllowedOrigins("*");
+
     }
 
     @Override
