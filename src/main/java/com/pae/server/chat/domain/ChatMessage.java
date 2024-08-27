@@ -28,20 +28,21 @@ public class ChatMessage extends BaseEntity {
     private Boolean isRead; // 읽음 여부
 
     @Builder
-    public ChatMessage(Long chatRoomId, Long senderId, String messageContent, MessageType messageType) {
+    public ChatMessage(Long chatRoomId, Long senderId, String messageContent, MessageType messageType, boolean isRead) {
         this.chatRoomId = chatRoomId;
         this.senderId = senderId;
         this.messageContent = messageContent;
         this.messageType = messageType;
-        this.isRead = false;
+        this.isRead = isRead;
     }
 
-    public static ChatMessage of(ChatSendReqDto chatSendReqDto, Long trustChatRoomId) {
+    public static ChatMessage of(ChatSendReqDto chatSendReqDto, Long trustChatRoomId, boolean isRead) {
         return ChatMessage.builder()
                 .chatRoomId(trustChatRoomId)
                 .senderId(chatSendReqDto.senderId())
                 .messageContent(chatSendReqDto.message())
                 .messageType(chatSendReqDto.messageType())
+                .isRead(isRead)
                 .build();
     }
 }

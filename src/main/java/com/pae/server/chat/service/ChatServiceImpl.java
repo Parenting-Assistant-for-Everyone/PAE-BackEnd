@@ -9,6 +9,7 @@ import com.pae.server.chat.dto.response.ChatMessageRespDto;
 import com.pae.server.chat.dto.response.ChatRoomCreateRespDto;
 import com.pae.server.chat.dto.response.ChatRoomRespDto;
 import com.pae.server.chat.dto.response.ChatSendRespDto;
+import com.pae.server.chat.listner.ChatEventListener;
 import com.pae.server.chat.repository.mongo.ChatMessageRepository;
 import com.pae.server.chat.repository.ChatRoomRepository;
 import com.pae.server.common.enums.CustomResponseStatus;
@@ -35,6 +36,7 @@ public class ChatServiceImpl implements ChatService {
     private final ChatMessageRepository chatMessageRepository;
     private final MemberRepository memberRepository;
     private final GoodsBoardRepository goodsBoardRepository;
+    private final ChatEventListener chatEventListener;
 
     @Override
     public ChatRoomCreateRespDto createChatRoom(ChatRoomCreateReqDto chatRoomCreateReqDto) {
@@ -51,7 +53,12 @@ public class ChatServiceImpl implements ChatService {
         );
         if (Boolean.FALSE.equals(chatRoom.getIsActivate())) chatRoom.activateChatRoom();
 
-        return ChatSendRespDto.from(saveChatMessage(chatSendReqDto, chatRoomId));
+        boolean userInRoom = chatEventListener.isUserInRoom(chatRoomId);
+        if (userInRoom) {
+            return ChatSendRespDto.from(saveChatMessage(chatSendReqDto, chatRoomId, true));
+        }
+
+        return ChatSendRespDto.from(saveChatMessage(chatSendReqDto, chatRoomId, false));
     }
 
     @Override
@@ -101,8 +108,8 @@ public class ChatServiceImpl implements ChatService {
         return chatMessages.stream().map(ChatMessageRespDto::from).toList();
     }
 
-    private ChatMessage saveChatMessage(ChatSendReqDto chatSendReqDto, Long trustChatRoomId) {
-        return chatMessageRepository.save(ChatMessage.of(chatSendReqDto, trustChatRoomId));
+    private ChatMessage saveChatMessage(ChatSendReqDto chatSendReqDto, Long trustChatRoomId, boolean isRead) {
+        return chatMessageRepository.save(ChatMessage.of(chatSendReqDto, trustChatRoomId, isRead));
     }
 
     private void validGoodsChatRoom(Long initiatorId, Long recipientId, Long goodsBoardId) {
