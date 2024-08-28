@@ -45,11 +45,18 @@ public class ChatController {
             @DestinationVariable Long chatRoomId,
             @RequestBody ChatSendReqDto chatSendReqDto
     ) {
-        ChatSendRespDto response = chatService.sendMessage(chatSendReqDto, chatRoomId);
+        log.info("chatSendReqDto : {}", chatSendReqDto);
 
+        ChatSendRespDto response = chatService.sendMessage(chatSendReqDto, chatRoomId);
+        log.info("response : {}", response);
         messagingTemplate.convertAndSend(
                 "/sub/chatroom/" + chatRoomId,
                 response
+        );
+
+        messagingTemplate.convertAndSend(
+                "/sub/unread/" + chatRoomId + "/" + response.otherUserId(),
+                response.unreadMessageCount()
         );
     }
 

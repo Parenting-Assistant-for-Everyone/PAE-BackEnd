@@ -54,11 +54,19 @@ public class ChatServiceImpl implements ChatService {
         if (Boolean.FALSE.equals(chatRoom.getIsActivate())) chatRoom.activateChatRoom();
 
         boolean userInRoom = chatEventListener.isUserInRoom(chatRoomId);
-        if (userInRoom) {
-            return ChatSendRespDto.from(saveChatMessage(chatSendReqDto, chatRoomId, true));
-        }
 
-        return ChatSendRespDto.from(saveChatMessage(chatSendReqDto, chatRoomId, false));
+        Long otherUserId = Objects.equals(chatRoom.getInitiatorId(), chatSendReqDto.senderId())
+                ? chatRoom.getRecipientId()
+                : chatRoom.getInitiatorId();
+
+//        Long unReadMessageCount = chatMessageRepository.countUnreadMessagesByChatRoomIdAndReceiverId(chatRoom.getId(), otherUserId);
+        List<ChatMessage> unReadMessageCounts = chatMessageRepository.findUnreadMessages(chatRoomId, otherUserId);
+        for (ChatMessage chatMessage : unReadMessageCounts) {
+            log.info(chatMessage.getMessageContent());
+        }
+        int unReadMessageCount = unReadMessageCounts.size();
+        log.info("안읽은 수 : {}", unReadMessageCount);
+        return ChatSendRespDto.from(saveChatMessage(chatSendReqDto, chatRoomId, userInRoom), otherUserId, unReadMessageCount);
     }
 
     @Override

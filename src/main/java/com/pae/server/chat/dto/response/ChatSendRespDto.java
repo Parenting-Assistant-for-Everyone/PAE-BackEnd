@@ -9,13 +9,17 @@ import java.time.LocalDateTime;
 public record ChatSendRespDto(
         String messageContent,
         LocalDateTime sendAt,
-        Long senderId
+        Long senderId,
+        Long otherUserId,
+        Integer unreadMessageCount
 ) {
-    public static ChatSendRespDto from(ChatMessage chatMessage) {
+    public static ChatSendRespDto from(ChatMessage chatMessage, Long otherUserId, Integer unreadMessageCount) {
         return ChatSendRespDto.builder()
                 .messageContent(chatMessage.getMessageContent())
                 .sendAt(chatMessage.getCreatedAt())
                 .senderId(chatMessage.getSenderId())
+                .otherUserId(otherUserId)
+                .unreadMessageCount(unreadMessageCount)
                 .build();
     }
 }

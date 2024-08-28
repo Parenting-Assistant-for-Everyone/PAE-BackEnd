@@ -18,4 +18,8 @@ public interface ChatMessageRepository extends MongoRepository<ChatMessage, Stri
     // 특정 채팅방에서 특정 수신자가 읽지 않은 메시지 조회
     @Query("{ 'chatRoomId': ?0, 'senderId': ?1, 'isRead': false }")
     List<ChatMessage> findUnreadMessages(Long chatRoomId, Long receiverId);
+
+    // 특정 채팅방의 속해있는 사람이 읽지 않은 메시지의 개수 조회
+//    @Query("{ 'chatRoomId': ?0, 'otherUserId': ?1, 'isRead': false }")
+//    Long countUnreadMessagesByChatRoomIdAndReceiverId(Long chatRoomId, Long otherUserId);
 }
