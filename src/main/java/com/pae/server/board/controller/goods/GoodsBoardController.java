@@ -30,10 +30,9 @@ public class GoodsBoardController {
 
     @PostMapping("goods")
     public ResponseEntity<ApiResponse<GoodsBoardRegistAndModifyRespDto>> goodsBoardRegist(
-            @RequestPart GoodsBoardRegistReqDto registDto,
+            @RequestPart(value = "registDto") GoodsBoardRegistReqDto registDto,
             @RequestPart(required = false) List<MultipartFile> images
     ) {
-        log.info("registDto : {}", registDto);
         GoodsBoardRegistAndModifyRespDto response = goodsBoardSerivce.goodsBoardRegist(registDto, images);
         return ResponseEntity.ok().body(ApiResponse.createSuccess(response, CustomResponseStatus.SUCCESS));
     }
