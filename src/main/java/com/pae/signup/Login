@@ -1,0 +1,5 @@
+@PostMapping("/login")
+public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto) {
+    TokenResponse tokenResponse = memberService.login(loginRequestDto);
+    return ResponseEntity.ok(tokenResponse);
+}
