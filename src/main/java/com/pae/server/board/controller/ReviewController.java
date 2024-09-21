@@ -2,10 +2,7 @@ package com.pae.server.board.controller;
 
 
 import com.pae.server.board.dto.request.ReviewReqDto;
-import com.pae.server.board.dto.request.UpdateConcernBoardReqDto;
-import com.pae.server.board.dto.response.ConcernBoardRespDto;
 import com.pae.server.board.dto.response.ReviewRespDto;
-import com.pae.server.board.dto.response.UpdateConcernBoardRespDto;
 import com.pae.server.board.service.ReviewServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

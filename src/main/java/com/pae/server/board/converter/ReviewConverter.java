@@ -1,7 +1,6 @@
 package com.pae.server.board.converter;
 
 import com.pae.server.board.domain.Review;
-import com.pae.server.board.domain.enums.ReviewStatus;
 import com.pae.server.board.dto.request.ReviewReqDto;
 import com.pae.server.board.dto.response.ReviewRespDto;
 

@@ -1,11 +1,9 @@
 package com.pae.server.board.domain;
 
 import com.pae.server.board.domain.enums.ReviewStatus;
-import com.pae.server.board.domain.enums.SaleStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
